@@ -1,0 +1,8 @@
+{
+  "name": "fittrack",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "cd server && npm install && npm run start"
+  }
+}
