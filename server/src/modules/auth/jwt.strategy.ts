@@ -20,9 +20,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 const tokenExtractor = (req: Request): string | null => {
   let token = null
-  if (req && req.cookies) {
-    // extracting token from cookies or from req.headers.authorization
-    token = req.cookies['accessToken'] ? req.cookies['accessToken'] : req.headers.authorization.split(' ')[1]
+  if (req?.headers?.authorization) {
+    token = req.headers.authorization.split(' ')[1]
   }
   return token
 }
