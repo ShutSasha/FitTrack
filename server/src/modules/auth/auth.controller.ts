@@ -1,9 +1,9 @@
 import { AuthService } from './auth.service'
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UsePipes } from '@nestjs/common'
+import { Body, Controller, HttpCode, HttpStatus, Param, Post, Res, UsePipes } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ValidationPipe } from '../../pipes/validation.pipe'
 import { CreateUserDto, RegisterUserDto } from '../users/dto/create-user.dto'
-import { Response, Request } from 'express'
+import { Response } from 'express'
 import { LoginResponseDto } from './dto/login-response.dto'
 import { RegisterResponseDto } from './dto/register-response.dto'
 import { RefreshResponseDto } from './dto/refresh-response.dto'
@@ -57,20 +57,13 @@ export class AuthController {
     return this.authService.resetPassword(dto.username)
   }
 
-  @ApiOperation({ summary: 'refresh access token' })
+  @ApiOperation({ summary: 'refreshing tokens' })
   @ApiResponse({ status: 200, type: RefreshResponseDto })
-  @Post('/refresh')
+  @Post('/refresh/:refreshToken')
   @HttpCode(HttpStatus.OK)
-  async refresh(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const accessTokenFromReq = req.cookies['accessToken']
+  async refresh(@Param('refreshToken') refreshTokenReq: string, @Res() res: Response): Promise<void> {
+    const { accessToken, refreshToken } = await this.authService.refreshTokens(refreshTokenReq)
 
-    const { accessToken } = await this.authService.refreshToken(accessTokenFromReq)
-
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    })
-    res.send({ message: 'Token updated', token: { accessToken } })
+    res.send({ message: 'Token updated', tokens: { accessToken, refreshToken } })
   }
 }

@@ -21,7 +21,7 @@ export class AuthService {
 
   async login(dto: CreateUserDto): Promise<TokenResponseDto> {
     const user = await this.validateUser(dto)
-    return this.generateToken(user)
+    return this.generateTokens(user)
   }
 
   async registration(dto: RegisterUserDto): Promise<TokenResponseDto> {
@@ -35,7 +35,7 @@ export class AuthService {
 
     const user = await this.usersService.create({ ...dto, password: hashPassword })
 
-    return this.generateToken(user)
+    return this.generateTokens(user)
   }
 
   async updatePassword(dto: UpdatePasswordReqDto): Promise<UpdatePasswordResponseDto> {
@@ -76,21 +76,21 @@ export class AuthService {
     return { message: 'Password reset successfully', newPassword }
   }
 
-  async refreshToken(accessToken: string): Promise<TokenResponseDto> {
+  async refreshTokens(refreshToken: string): Promise<TokenResponseDto> {
     try {
-      const payload = this.jwtService.verify(accessToken, { secret: process.env.JWT_ACCESS_SECRET })
+      const payload = this.jwtService.verify(refreshToken, { secret: process.env.JWT_REFRESH_SECRET })
 
       const user = await this.usersService.getUserById(payload.id)
 
       if (!user) throw new UnauthorizedException()
 
-      return this.generateToken(user)
+      return this.generateTokens(user)
     } catch (e) {
       throw new UnauthorizedException('Invalid refresh token')
     }
   }
 
-  private async generateToken(user: UserDocument): Promise<TokenResponseDto> {
+  private async generateTokens(user: UserDocument): Promise<TokenResponseDto> {
     const payload = { username: user.username, id: user._id, roles: user.roles }
 
     const accessToken = this.jwtService.sign(payload, { expiresIn: '15m', secret: process.env.JWT_ACCESS_SECRET })
