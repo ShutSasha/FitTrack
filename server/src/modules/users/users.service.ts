@@ -13,7 +13,7 @@ export class UsersService {
   ) {}
 
   async getAllUsers(): Promise<UserDocument[]> {
-    const user = await this.userModel.find()
+    const user = await this.userModel.find().exec()
 
     return user
   }

@@ -23,5 +23,6 @@ const tokenExtractor = (req: Request): string | null => {
   if (req?.headers?.authorization) {
     token = req.headers.authorization.split(' ')[1]
   }
+
   return token
 }
