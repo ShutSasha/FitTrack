@@ -25,7 +25,7 @@ export class AuthController {
   async login(@Body() dto: CreateUserDto, @Res() res: Response): Promise<void> {
     const { accessToken, refreshToken } = await this.authService.login(dto)
 
-    res.send({ message: 'Login successful', tokens: { accessToken, refreshToken } })
+    res.send({ tokens: { accessToken, refreshToken } })
   }
 
   @ApiOperation({ summary: 'user register' })

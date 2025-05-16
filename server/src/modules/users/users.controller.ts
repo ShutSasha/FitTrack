@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, UsePipes } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, UseGuards, UsePipes } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { UsersService } from './users.service'
 import { User, UserDocument } from './users.schema'
 import { ValidationPipe } from '../../pipes/validation.pipe'
 import { CreateUserDto } from './dto/create-user.dto'
-// import { JwtAuthGuard } from '../auth/jwt-auth.guard'
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -15,7 +15,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get all users ' })
   @ApiResponse({ status: 200, type: [User] })
   @Get()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   getAllUser(): Promise<UserDocument[]> {
     return this.usersService.getAllUsers()
   }

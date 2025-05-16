@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
 
 export class LoginResponseDto {
-  @ApiProperty({ example: 'Login successful', description: 'Response message' })
-  message: string
-
-  @ApiProperty({ example: { accessToken: 'yourAccessToken' }, description: 'Token object' })
-  token: {
+  @ApiProperty({
+    example: { accessToken: 'yourAccessToken', refreshToken: 'yourRefreshToken' },
+    description: 'Token object',
+  })
+  tokens: {
     accessToken: string
+    refreshToken: string
   }
 }
