@@ -82,7 +82,7 @@ export class AuthService {
 
       const user = await this.usersService.getUserById(payload.id)
 
-      if (!user) throw new UnauthorizedException()
+      if (!user) throw new HttpException('User by id for refresh tokens not found', HttpStatus.NOT_FOUND)
 
       return this.generateTokens(user)
     } catch (e) {
@@ -93,7 +93,7 @@ export class AuthService {
   private async generateTokens(user: UserDocument): Promise<TokenResponseDto> {
     const payload = { username: user.username, id: user._id, roles: user.roles }
 
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '15m', secret: process.env.JWT_ACCESS_SECRET })
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '35s', secret: process.env.JWT_ACCESS_SECRET })
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '30d', secret: process.env.JWT_REFRESH_SECRET })
 
     return { accessToken, refreshToken }

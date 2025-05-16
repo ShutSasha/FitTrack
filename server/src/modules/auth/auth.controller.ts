@@ -64,6 +64,6 @@ export class AuthController {
   async refresh(@Param('refreshToken') refreshTokenReq: string, @Res() res: Response): Promise<void> {
     const { accessToken, refreshToken } = await this.authService.refreshTokens(refreshTokenReq)
 
-    res.send({ message: 'Token updated', tokens: { accessToken, refreshToken } })
+    res.send({ tokens: { accessToken, refreshToken } })
   }
 }
