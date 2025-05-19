@@ -13,13 +13,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common'
 import { RolesService } from './roles.service'
-import { CreateRoleDto } from './dto/create-role.dto'
-import { Role, RoleDocument } from './roles.schema'
+import { Role } from './roles.schema'
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { UpdateRoleDto } from './dto/update-role.dto'
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'
-// import { Roles } from './roles-auth.decorator'
-// import { RolesGuard } from './roles.guard'
+import { Roles } from './roles-auth.decorator'
+import { RolesGuard } from './roles.guard'
+import { CreateRoleDto, UpdateRoleDto } from '~types/roles.types'
 
 @ApiTags('roles')
 @ApiBearerAuth()
@@ -30,20 +28,20 @@ export class RolesController {
   @ApiOperation({ summary: 'Get all roles ' })
   @ApiResponse({ status: 200, type: [Role] })
   // @Roles('ADMIN')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(RolesGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
-  getRoles(): Promise<RoleDocument[]> {
+  getRoles() {
     return this.roleService.getRoles()
   }
 
   @ApiOperation({ summary: 'Get role by value' })
   @ApiResponse({ status: 200, type: Role })
-  // @Roles('ADMIN')
-  // @UseGuards(RolesGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Get('/:value')
   @HttpCode(HttpStatus.OK)
-  getByValue(@Param('value') value: string): Promise<RoleDocument> {
+  getByValue(@Param('value') value: string) {
     return this.roleService.getRoleByValue(value)
   }
 
@@ -54,7 +52,7 @@ export class RolesController {
   // @UseGuards(RolesGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() dto: CreateRoleDto): Promise<RoleDocument> {
+  create(@Body() dto: CreateRoleDto) {
     dto.value = dto.value.toUpperCase()
     return this.roleService.createRole(dto)
   }
@@ -66,16 +64,16 @@ export class RolesController {
   // @UseGuards(RolesGuard)
   @Patch()
   @HttpCode(HttpStatus.OK)
-  update(@Body() dto: UpdateRoleDto): Promise<RoleDocument> {
+  update(@Body() dto: UpdateRoleDto) {
     return this.roleService.updateRole(dto)
   }
 
   @ApiOperation({ summary: 'Delete role' })
   @ApiResponse({ status: 200, type: Role })
-  // @Roles('ADMIN')
-  // @UseGuards(RolesGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Delete('/:id')
-  delete(@Param('id') id: string): Promise<RoleDocument> {
+  delete(@Param('id') id: string) {
     return this.roleService.deleteRole(id)
   }
 }

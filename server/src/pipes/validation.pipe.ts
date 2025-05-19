@@ -17,10 +17,12 @@ export class ValidationPipe implements PipeTransform<any> {
     return obj
   }
 
-  private buildErrorMessages(errors: ValidationError[]): string[] {
-    return errors.map(err => {
-      const constraints = err.constraints ? Object.values(err.constraints).join(', ') : ''
-      return `${err.property} - ${constraints}`
-    })
+  private buildErrorMessages(errors: ValidationError[]): { messages: string[] } {
+    return {
+      messages: errors.map(err => {
+        const constraints = err.constraints ? Object.values(err.constraints).join(', ') : ''
+        return `${err.property} - ${constraints}`
+      }),
+    }
   }
 }

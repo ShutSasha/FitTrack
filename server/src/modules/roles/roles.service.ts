@@ -2,9 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Role, RoleDocument } from './roles.schema'
 import { isValidObjectId, Model } from 'mongoose'
-import { CreateRoleDto } from './dto/create-role.dto'
-import { UpdateRoleDto } from './dto/update-role.dto'
 import { User, UserDocument } from '../users/users.schema'
+import { CreateRoleDto, UpdateRoleDto } from '~types/roles.types'
 
 @Injectable()
 export class RolesService {
@@ -66,7 +65,7 @@ export class RolesService {
     const role = await this.roleModel.findById(id).exec()
 
     if (!role) {
-      throw new HttpException('Role not found', HttpStatus.NOT_FOUND)
+      throw new HttpException('Role has not found', HttpStatus.NOT_FOUND)
     }
 
     const users = await this.userModel.find({ roles: { $in: [role._id] } }).exec()

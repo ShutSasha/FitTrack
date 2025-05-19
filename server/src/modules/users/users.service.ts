@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { Model, isValidObjectId } from 'mongoose'
+import { Model, Types, isValidObjectId } from 'mongoose'
 import { User, UserDocument } from './users.schema'
 import { InjectModel } from '@nestjs/mongoose'
-import { CreateUserDto } from './dto/create-user.dto'
 import { RolesService } from '../roles/roles.service'
+import { CreateUserDto } from '~types/users.types'
 
 @Injectable()
 export class UsersService {
@@ -13,9 +13,8 @@ export class UsersService {
   ) {}
 
   async getAllUsers(): Promise<UserDocument[]> {
-    const user = await this.userModel.find().exec()
-
-    return user
+    const users = await this.userModel.find().populate('roles').exec()
+    return users
   }
 
   async getUserById(id: string): Promise<UserDocument> {
@@ -39,16 +38,16 @@ export class UsersService {
   }
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
-    const userWithSameUsername = await this.userModel.findOne({ username: dto.username }).exec()
+    const candidate = await this.userModel.findOne({ username: dto.username }).exec()
 
-    if (userWithSameUsername) {
+    if (candidate) {
       throw new HttpException('User with this username already exist', HttpStatus.BAD_REQUEST)
     }
 
     const user = new this.userModel(dto)
     const role = await this.rolesService.getRoleByValue('USER')
 
-    user.roles = [role._id]
+    user.roles = [new Types.ObjectId(role._id)]
 
     return user.save()
   }

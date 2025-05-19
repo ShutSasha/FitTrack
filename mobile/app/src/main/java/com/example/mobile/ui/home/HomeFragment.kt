@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
 
         textView.setOnClickListener {
 
-            val loginDto = LoginDto("cdidk1", "VERY_STRONG_PASSWORD")
+            val loginDto = LoginDto("cdidk1", "qwerty123123")
 
             authAPI.login(loginDto).enqueue(object : Callback<RefreshRes> {
                 override fun onResponse(call: Call<RefreshRes>, response: Response<RefreshRes>) {
