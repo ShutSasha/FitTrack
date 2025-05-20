@@ -1,5 +1,3 @@
-// TODO: fix ValidationException response, make a suit form of response like an obj {messages: []}
-
 import { HttpException, HttpStatus } from '@nestjs/common'
 
 export class ValidationException extends HttpException {

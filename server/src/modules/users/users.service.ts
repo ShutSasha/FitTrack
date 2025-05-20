@@ -37,7 +37,7 @@ export class UsersService {
     return user
   }
 
-  async create(dto: CreateUserDto): Promise<UserDocument> {
+  async create(dto: CreateUserDto & { emailConfirmationToken?: string }): Promise<UserDocument> {
     const candidate = await this.userModel.findOne({ username: dto.username }).exec()
 
     if (candidate) {

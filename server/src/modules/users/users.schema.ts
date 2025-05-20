@@ -17,6 +17,14 @@ export class User {
   @Prop({ required: true, unique: true, match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })
   email: string
 
+  @ApiProperty({ example: false, description: 'Whether the email is confirmed' })
+  @Prop({ default: false })
+  isEmailConfirmed: boolean
+
+  @ApiProperty({ example: 'abc123', description: 'Token for email confirmation', nullable: true })
+  @Prop({ default: null })
+  emailConfirmationToken: string
+
   @ApiProperty({ example: 'qwerty123123', description: 'The hashed user password' })
   @Prop({ required: true, minlength: 8 })
   password: string

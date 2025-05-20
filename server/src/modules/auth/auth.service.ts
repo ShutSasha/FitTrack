@@ -7,17 +7,25 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { CreateUserDto } from '~types/users.types'
 import { RegisterUserDto, TokensRes } from '~types/auth.types'
+import { EmailService } from 'modules/email/email.service'
+import { v4 as uuidv4 } from 'uuid'
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly usersService: UsersService,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
 
   async login(dto: CreateUserDto): Promise<TokensRes> {
     const user = await this.validateUser(dto)
+
+    if (!user.isEmailConfirmed) {
+      throw new HttpException('Please confirm your email first', HttpStatus.FORBIDDEN)
+    }
+
     return this.generateTokens(user)
   }
 
@@ -33,10 +41,47 @@ export class AuthService {
     if (dto.password !== dto.confirmPassword) throw new HttpException('Passwords do not match', HttpStatus.BAD_REQUEST)
 
     const hashPassword = await bcrypt.hash(dto.password, +process.env.PASSWORD_SALT)
+    const confirmationToken = uuidv4()
 
-    const user = await this.usersService.create({ ...dto, password: hashPassword })
+    const user = await this.usersService.create({
+      ...dto,
+      password: hashPassword,
+      emailConfirmationToken: confirmationToken,
+    })
+
+    await this.emailService.sendConfirmationEmail(dto.email, confirmationToken)
 
     return this.generateTokens(user)
+  }
+
+  async confirmEmail(token: string): Promise<void> {
+    const user = await this.userModel.findOne({ emailConfirmationToken: token }).exec()
+
+    if (!user) {
+      throw new HttpException('Invalid or expired confirmation token', HttpStatus.BAD_REQUEST)
+    }
+
+    user.isEmailConfirmed = true
+    user.emailConfirmationToken = null
+    await user.save()
+  }
+
+  async resendConfirmationEmail(userId: string): Promise<void> {
+    const user = await this.userModel.findById(userId).exec()
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    }
+
+    if (user.isEmailConfirmed) {
+      throw new HttpException('Email already confirmed', HttpStatus.BAD_REQUEST)
+    }
+
+    const confirmationToken = uuidv4()
+    user.emailConfirmationToken = confirmationToken
+    await user.save()
+
+    await this.emailService.sendConfirmationEmail(user.email, confirmationToken)
   }
 
   async refreshTokens(refreshToken: string): Promise<TokensRes> {

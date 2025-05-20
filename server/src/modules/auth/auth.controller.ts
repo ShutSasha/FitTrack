@@ -1,5 +1,5 @@
 import { AuthService } from './auth.service'
-import { Body, Controller, HttpCode, HttpStatus, Param, Post, Res, UsePipes } from '@nestjs/common'
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Res, UsePipes } from '@nestjs/common'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ValidationPipe } from '../../pipes/validation.pipe'
 import { Response } from 'express'
@@ -28,7 +28,6 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   async registration(@Body() userDto: RegisterUserDto, @Res() res: Response) {
     const tokens = await this.authService.registration(userDto)
-    console.log(tokens)
 
     res.send({ tokens: tokens })
   }
@@ -43,22 +42,21 @@ export class AuthController {
     res.send({ tokens: { accessToken, refreshToken } })
   }
 
-  // TODO with email confirm
-  // @ApiOperation({ summary: 'change user password to another one' })
-  // @ApiResponse({ status: 200, type: UpdatePasswordResponseDto })
-  // @UsePipes(ValidationPipe)
-  // @Post('/update-password')
-  // @HttpCode(HttpStatus.OK)
-  // async updatePassword(@Body() dto: UpdatePasswordReqDto) {
-  //   return this.authService.updatePassword(dto)
-  // }
+  @ApiOperation({ summary: 'confirm email' })
+  @ApiResponse({ status: 200, description: 'Email confirmed successfully' })
+  @Get('/confirm-email/:token')
+  @HttpCode(HttpStatus.OK)
+  async confirmEmail(@Param('token') token: string) {
+    await this.authService.confirmEmail(token)
+    return { message: 'Email confirmed successfully' }
+  }
 
-  // @ApiOperation({ summary: 'reset password' })
-  // @ApiResponse({ status: 200, type: ResetPasswordResponseDto })
-  // @UsePipes(ValidationPipe)
-  // @Post('/reset-password')
-  // @HttpCode(HttpStatus.OK)
-  // async resetPassword(@Body() dto: ResetPasswordReqDto): Promise<ResetPasswordResponseDto> {
-  //   return this.authService.resetPassword(dto.username)
-  // }
+  @ApiOperation({ summary: 'resend confirmation email' })
+  @ApiResponse({ status: 200, description: 'Confirmation email resent' })
+  @Post('/resend-confirmation/:userId')
+  @HttpCode(HttpStatus.OK)
+  async resendConfirmationEmail(@Param('userId') userId: string) {
+    await this.authService.resendConfirmationEmail(userId)
+    return { message: 'Confirmation email sent' }
+  }
 }
