@@ -28,7 +28,7 @@ export class LoginRes {
 
 export class RegisterRes {
   @ApiProperty({
-    example: { tokens: { accessToken: 'ababab1', refreshToken: 'ababab2' } },
+    example: { accessToken: 'ababab1', refreshToken: 'ababab2' },
     description: 'Register response dto with tokens',
   })
   tokens: {
@@ -46,4 +46,12 @@ export class RefreshRes {
     accessToken: string
     refreshToken: string
   }
+}
+
+export class TokensRes {
+  @ApiProperty({ example: 'bdsfdsfkl.bearsr2152.215342', description: 'Just a access token' })
+  readonly accessToken: string
+
+  @ApiProperty({ example: 'bdsfdsfkl.bearsr2152.215342', description: 'Just a refresh token' })
+  readonly refreshToken: string
 }

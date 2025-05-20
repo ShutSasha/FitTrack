@@ -5,9 +5,8 @@ import { User, UserDocument } from '../users/users.schema'
 import * as bcrypt from 'bcryptjs'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
-import { TokenResponseDto } from './dto/token-response.dto'
 import { CreateUserDto } from '~types/users.types'
-import { RegisterUserDto } from '~types/auth.types'
+import { RegisterUserDto, TokensRes } from '~types/auth.types'
 
 @Injectable()
 export class AuthService {
@@ -17,12 +16,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(dto: CreateUserDto): Promise<TokenResponseDto> {
+  async login(dto: CreateUserDto): Promise<TokensRes> {
     const user = await this.validateUser(dto)
     return this.generateTokens(user)
   }
 
-  async registration(dto: RegisterUserDto): Promise<TokenResponseDto> {
+  async registration(dto: RegisterUserDto): Promise<TokensRes> {
     const candidate = await this.userModel
       .findOne({
         $or: [{ username: dto.username }, { email: dto.email }],
@@ -40,7 +39,7 @@ export class AuthService {
     return this.generateTokens(user)
   }
 
-  async refreshTokens(refreshToken: string): Promise<TokenResponseDto> {
+  async refreshTokens(refreshToken: string): Promise<TokensRes> {
     try {
       const payload = this.jwtService.verify(refreshToken, { secret: process.env.JWT_REFRESH_SECRET })
 
@@ -54,7 +53,7 @@ export class AuthService {
     }
   }
 
-  private async generateTokens(user: UserDocument): Promise<TokenResponseDto> {
+  private async generateTokens(user: UserDocument): Promise<TokensRes> {
     const payload = { username: user.username, id: user._id, roles: user.roles }
 
     const accessToken = this.jwtService.sign(payload, { expiresIn: '15d', secret: process.env.JWT_ACCESS_SECRET })

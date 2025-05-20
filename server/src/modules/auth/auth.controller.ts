@@ -12,7 +12,6 @@ export class AuthController {
 
   @ApiOperation({ summary: 'user login' })
   @ApiResponse({ status: 200, type: LoginRes })
-  // TODO check ValidationPipe response here
   @UsePipes(ValidationPipe)
   @Post('/login')
   @HttpCode(HttpStatus.OK)
@@ -28,9 +27,10 @@ export class AuthController {
   @Post('/registration')
   @HttpCode(HttpStatus.CREATED)
   async registration(@Body() userDto: RegisterUserDto, @Res() res: Response) {
-    const { accessToken, refreshToken } = await this.authService.registration(userDto)
+    const tokens = await this.authService.registration(userDto)
+    console.log(tokens)
 
-    res.send({ tokens: { accessToken, refreshToken } })
+    res.send({ tokens: tokens })
   }
 
   @ApiOperation({ summary: 'refreshing tokens' })
