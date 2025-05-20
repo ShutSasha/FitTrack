@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { CreateUserDto } from './users.types'
-import { IsNotEmpty, IsString, Length } from 'class-validator'
+import { IsNotEmpty, IsString, Length, MinLength } from 'class-validator'
 
 export class RegisterUserDto extends CreateUserDto {
   @ApiProperty({
@@ -54,4 +54,50 @@ export class TokensRes {
 
   @ApiProperty({ example: 'bdsfdsfkl.bearsr2152.215342', description: 'Just a refresh token' })
   readonly refreshToken: string
+}
+
+export class ConfirmResetPasswordCodeReq {
+  @ApiProperty({ example: '12345667890qwertyuiop[', description: 'userId' })
+  readonly userId: string
+
+  @ApiProperty({ example: '1234', description: 'confirm code' })
+  readonly code: number
+
+  @ApiProperty({
+    example: 'newpassword123',
+    description: 'The new password for the user',
+  })
+  @IsString()
+  @MinLength(8)
+  readonly newPassword: string
+
+  @ApiProperty({
+    example: 'newpassword123',
+    description: 'Confirmation of the new password',
+  })
+  @IsString()
+  @MinLength(8)
+  readonly newPasswordConfirm: string
+}
+
+export class SendResetPasswordCodeResponseDto {
+  @ApiProperty({
+    example: 'Confirmation code sent to email',
+    description: 'Message indicating that the reset code was sent',
+  })
+  message: string
+}
+
+export class ConfirmResetPasswordCodeResponseDto {
+  @ApiProperty({
+    example: true,
+    description: 'Indicates if the confirmation code was valid',
+  })
+  success: boolean
+
+  @ApiProperty({
+    example: 'Password changed successfully',
+    description: 'Message indicating the result of code confirmation',
+  })
+  message: string
 }

@@ -25,6 +25,10 @@ export class User {
   @Prop({ default: null })
   emailConfirmationToken: string
 
+  @ApiProperty({ example: '1425', description: 'code for confirm reset password', nullable: true })
+  @Prop({ default: null })
+  resetPasswordCode: number
+
   @ApiProperty({ example: 'qwerty123123', description: 'The hashed user password' })
   @Prop({ required: true, minlength: 8 })
   password: string

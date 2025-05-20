@@ -4,9 +4,9 @@ import { JwtService } from '@nestjs/jwt'
 import { User, UserDocument } from '../users/users.schema'
 import * as bcrypt from 'bcryptjs'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import { isValidObjectId, Model } from 'mongoose'
 import { CreateUserDto } from '~types/users.types'
-import { RegisterUserDto, TokensRes } from '~types/auth.types'
+import { ConfirmResetPasswordCodeReq, RegisterUserDto, TokensRes } from '~types/auth.types'
 import { EmailService } from 'modules/email/email.service'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -82,6 +82,51 @@ export class AuthService {
     await user.save()
 
     await this.emailService.sendConfirmationEmail(user.email, confirmationToken)
+  }
+
+  async sendResetPasswordCode(email: string): Promise<void> {
+    const user = await this.userModel.findOne({ email }).exec()
+
+    if (!user) {
+      throw new HttpException('User not found with this email', HttpStatus.NOT_FOUND)
+    }
+
+    if (!user.isEmailConfirmed) {
+      throw new HttpException('Please confirm your email firstly', HttpStatus.BAD_REQUEST)
+    }
+
+    const confirmationCode = Math.floor(1000 + Math.random() * 9000)
+
+    user.resetPasswordCode = +confirmationCode
+    await user.save()
+
+    await this.emailService.sendConfirmationResetPasswordCode(user.email, +confirmationCode)
+  }
+
+  async confirmResetPasswordCode(dto: ConfirmResetPasswordCodeReq): Promise<void> {
+    if (!isValidObjectId(dto.userId)) {
+      throw new HttpException('Invalid user ID format', HttpStatus.BAD_REQUEST)
+    }
+
+    const user = await this.userModel.findOne({ _id: dto.userId }).exec()
+
+    if (!user) {
+      throw new HttpException('User not found with this id', HttpStatus.NOT_FOUND)
+    }
+
+    if (user.resetPasswordCode !== dto.code) {
+      throw new HttpException('Code doesnt match with confirmed code', HttpStatus.NOT_FOUND)
+    }
+
+    if (dto.newPassword !== dto.newPasswordConfirm) {
+      throw new HttpException('New passwords do not match', HttpStatus.BAD_REQUEST)
+    }
+
+    user.resetPasswordCode = null
+    const hashPassword = await bcrypt.hash(dto.newPassword, +process.env.PASSWORD_SALT)
+    user.password = hashPassword
+
+    await user.save()
   }
 
   async refreshTokens(refreshToken: string): Promise<TokensRes> {
