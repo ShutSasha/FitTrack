@@ -153,12 +153,12 @@ export class PersonalizeDto {
   activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very active'
 
   @ApiProperty({
-    description: 'The birth date of the user in yyyy.mm.dd format',
+    description: 'The birth date of the user in yyyy-mm-dd format',
     example: '1990.01.01',
   })
   @IsDateString(
     { strict: true },
-    { message: 'Birth date must be a valid date in yyyy.mm.dd format (e.g., 1990-01-29)' },
+    { message: 'Birth date must be a valid date in yyyy-mm-dd format (e.g., 1990-01-29)' },
   )
   birthDate: string
 
