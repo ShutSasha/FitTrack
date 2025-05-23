@@ -6,7 +6,7 @@ import * as bcrypt from 'bcryptjs'
 import { InjectModel } from '@nestjs/mongoose'
 import { isValidObjectId, Model } from 'mongoose'
 import { CreateUserDto } from '~types/users.types'
-import { ConfirmResetPasswordCodeReq, RegisterUserDto, TokensRes } from '~types/auth.types'
+import { ConfirmResetPasswordCodeReq, PersonalizeDto, RegisterUserDto, TokensRes } from '~types/auth.types'
 import { EmailService } from 'modules/email/email.service'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -52,6 +52,29 @@ export class AuthService {
     await this.emailService.sendConfirmationEmail(dto.email, confirmationToken)
 
     return this.generateTokens(user)
+  }
+
+  async personalize(dto: PersonalizeDto): Promise<User> {
+    if (!isValidObjectId(dto.userId)) {
+      throw new HttpException('Invalid user ID format', HttpStatus.BAD_REQUEST)
+    }
+
+    const candidate = await this.userModel.findById(dto.userId).exec()
+
+    if (!candidate) throw new HttpException('User with this id not found', HttpStatus.BAD_REQUEST)
+
+    if (dto.gender !== undefined) candidate.gender = dto.gender
+    if (dto.height !== undefined) candidate.height = dto.height
+    if (dto.weight !== undefined) candidate.weight = dto.weight
+    if (dto.bodyType !== undefined) candidate.bodyType = dto.bodyType
+    if (dto.activityLevel !== undefined) candidate.activityLevel = dto.activityLevel
+    if (dto.birthDate !== undefined) candidate.birthDate = new Date(dto.birthDate.replace(/\./g, '-'))
+    if (dto.goalType !== undefined) candidate.goalType = dto.goalType
+    if (dto.targetWeight !== undefined) candidate.targetWeight = dto.targetWeight
+
+    await candidate.save()
+
+    return candidate
   }
 
   async confirmEmail(token: string): Promise<void> {

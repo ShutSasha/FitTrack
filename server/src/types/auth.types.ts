@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { CreateUserDto } from './users.types'
-import { IsNotEmpty, IsString, Length, MinLength } from 'class-validator'
+import { IsDateString, IsEnum, IsNotEmpty, IsNumber, IsString, Length, Max, Min, MinLength } from 'class-validator'
 
 export class RegisterUserDto extends CreateUserDto {
   @ApiProperty({
@@ -100,4 +100,84 @@ export class ConfirmResetPasswordCodeResponseDto {
     description: 'Message indicating the result of code confirmation',
   })
   message: string
+}
+
+export class PersonalizeDto {
+  @ApiProperty({ example: '12345667890qwertyuiop[', description: 'userId' })
+  readonly userId: string
+
+  @ApiProperty({
+    description: 'The gender of the user',
+    example: 'male',
+    enum: ['male', 'female', 'other'],
+  })
+  @IsEnum(['male', 'female', 'other'], { message: 'Gender must be one of: male, female, other' })
+  gender: 'male' | 'female' | 'other'
+
+  @ApiProperty({
+    description: 'The height of the user in centimeters',
+    example: 175,
+  })
+  @IsNumber({}, { message: 'Height must be a number' })
+  @Min(50, { message: 'Height must be at least 50 cm' })
+  @Max(300, { message: 'Height must not exceed 300 cm' })
+  height: number
+
+  @ApiProperty({
+    description: 'The weight of the user in kilograms',
+    example: 70,
+  })
+  @IsNumber({}, { message: 'Weight must be a number' })
+  @Min(20, { message: 'Weight must be at least 20 kg' })
+  @Max(500, { message: 'Weight must not exceed 500 kg' })
+  weight: number
+
+  @ApiProperty({
+    description: 'The body type of the user',
+    example: 'athletic',
+    enum: ['slim', 'average', 'athletic', 'muscular', 'heavy'],
+  })
+  @IsEnum(['slim', 'average', 'athletic', 'muscular', 'heavy'], {
+    message: 'Body type must be one of: slim, average, athletic, muscular, heavy',
+  })
+  bodyType: 'slim' | 'average' | 'athletic' | 'muscular' | 'heavy'
+
+  @ApiProperty({
+    description: 'The activity level of the user',
+    example: 'moderate',
+    enum: ['sedentary', 'light', 'moderate', 'active', 'very active'],
+  })
+  @IsEnum(['sedentary', 'light', 'moderate', 'active', 'very active'], {
+    message: 'Activity level must be one of: sedentary, light, moderate, active, very active',
+  })
+  activityLevel: 'sedentary' | 'light' | 'moderate' | 'active' | 'very active'
+
+  @ApiProperty({
+    description: 'The birth date of the user in yyyy.mm.dd format',
+    example: '1990.01.01',
+  })
+  @IsDateString(
+    { strict: true },
+    { message: 'Birth date must be a valid date in yyyy.mm.dd format (e.g., 1990-01-29)' },
+  )
+  birthDate: string
+
+  @ApiProperty({
+    description: 'The fitness goal of the user',
+    example: 'weight_loss',
+    enum: ['weight_loss', 'muscle_gain', 'maintenance', 'endurance'],
+  })
+  @IsEnum(['weight_loss', 'muscle_gain', 'maintenance', 'endurance'], {
+    message: 'Goal type must be one of: weight_loss, muscle_gain, maintenance, endurance',
+  })
+  goalType: 'weight_loss' | 'muscle_gain' | 'maintenance' | 'endurance'
+
+  @ApiProperty({
+    description: 'The target weight of the user in kilograms',
+    example: 65,
+  })
+  @IsNumber({}, { message: 'Target weight must be a number' })
+  @Min(20, { message: 'Target weight must be at least 20 kg' })
+  @Max(500, { message: 'Target weight must not exceed 500 kg' })
+  targetWeight: number
 }

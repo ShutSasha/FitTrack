@@ -8,11 +8,13 @@ import {
   ConfirmResetPasswordCodeResponseDto,
   LoginRes,
   LoginUserDto,
+  PersonalizeDto,
   RefreshRes,
   RegisterRes,
   RegisterUserDto,
   SendResetPasswordCodeResponseDto,
 } from '~types/auth.types'
+import { User } from 'modules/users/users.schema'
 
 @ApiTags('auth')
 @Controller('auth')
@@ -39,6 +41,15 @@ export class AuthController {
     const tokens = await this.authService.registration(userDto)
 
     res.send({ tokens: tokens })
+  }
+
+  @ApiOperation({ summary: 'This endpoint set up personalization info about user' })
+  @ApiResponse({ status: 200, type: User })
+  @UsePipes(ValidationPipe)
+  @Post('/personalization')
+  @HttpCode(HttpStatus.OK)
+  async personalization(@Body() dto: PersonalizeDto) {
+    return this.authService.personalize(dto)
   }
 
   @ApiOperation({ summary: 'refreshing tokens' })
