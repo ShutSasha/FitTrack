@@ -1,12 +1,30 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common'
 import { NutritionProductsService } from './nutrition-products.service'
-import { ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 import { NutritionProduct } from './nutrition-product.schema'
-import { NutritionProductDto } from '~types/nutrition-products.types'
+import { NutritionProductDto, NutritionProductSearchDto, SearchRes } from '~types/nutrition-products.types'
+import { ProductTypes } from 'consts/products.consts'
 
 @Controller('nutrition-products')
 export class NutritionProductsController {
   constructor(private readonly nutritionProductService: NutritionProductsService) {}
+
+  @ApiOperation({ summary: 'Search nutrition products with pagination, sorting, and filtering' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of nutrition products with pagination metadata',
+    type: SearchRes,
+  })
+  @ApiQuery({ name: 'query', required: false, type: String, example: 'buckwheat' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @ApiQuery({ name: 'sortBy', required: false, enum: ['calories', 'protein', 'fat', 'carbs'] })
+  @ApiQuery({ name: 'sortOrder', required: false, enum: ['asc', 'desc'] })
+  @ApiQuery({ name: 'productType', required: false, enum: ProductTypes })
+  @Get('search')
+  searchNutritionProducts(@Query() query: NutritionProductSearchDto) {
+    return this.nutritionProductService.findWithPagination(query)
+  }
 
   @ApiOperation({ summary: 'Get all nutrition products ' })
   @ApiResponse({ status: 200, type: [NutritionProduct] })
