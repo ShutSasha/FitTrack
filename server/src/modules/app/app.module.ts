@@ -5,6 +5,10 @@ import { UsersModule } from '../users/users.module'
 import { RolesModule } from '../roles/roles.module'
 import { AuthModule } from '../auth/auth.module'
 import { EmailModule } from 'modules/email/email.module'
+import { DailyLogsModule } from 'modules/daily-logs/daily-logs.module'
+import { MealsModule } from 'modules/meals/meals.module'
+import { ActivitiesModule } from 'modules/activities/activities.module'
+import { NutritionProductsModule } from 'modules/nutrition-products/nutrition-products.module'
 
 @Module({
   imports: [
@@ -16,6 +20,10 @@ import { EmailModule } from 'modules/email/email.module'
     UsersModule,
     RolesModule,
     AuthModule,
+    DailyLogsModule,
+    MealsModule,
+    ActivitiesModule,
+    NutritionProductsModule,
   ],
 })
 export class AppModule {}
