@@ -47,7 +47,7 @@ export class ActivitiesService {
 
   async getActivityById(id: string): Promise<ActivityDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid activity ID format', HttpStatus.BAD_REQUEST)
     }
 
     const activity = await this.activityModel.findById(id).exec()
@@ -73,7 +73,7 @@ export class ActivitiesService {
 
   async update(id: string, dto: ActivityDto): Promise<ActivityDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid activity ID format', HttpStatus.BAD_REQUEST)
     }
 
     const activity = await this.activityModel.findById(id).exec()
@@ -91,7 +91,7 @@ export class ActivitiesService {
 
   async delete(id: string): Promise<ActivityDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid activity ID format', HttpStatus.BAD_REQUEST)
     }
 
     const activity = await this.activityModel.findById(id).exec()

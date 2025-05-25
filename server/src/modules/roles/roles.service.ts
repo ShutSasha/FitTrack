@@ -35,7 +35,7 @@ export class RolesService {
 
   async updateRole(dto: UpdateRoleDto): Promise<RoleDocument> {
     if (!isValidObjectId(dto.id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid role ID format', HttpStatus.BAD_REQUEST)
     }
 
     const role = await this.roleModel.findById(dto.id).exec()
@@ -59,7 +59,7 @@ export class RolesService {
 
   async deleteRole(id: string): Promise<RoleDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid role ID format', HttpStatus.BAD_REQUEST)
     }
 
     const role = await this.roleModel.findById(id).exec()

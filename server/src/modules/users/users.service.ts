@@ -19,7 +19,7 @@ export class UsersService {
 
   async getUserById(id: string): Promise<UserDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid user ID format', HttpStatus.BAD_REQUEST)
     }
 
     const user = await this.userModel.findById(id).populate('roles').exec()
@@ -54,7 +54,7 @@ export class UsersService {
 
   async delete(id: string): Promise<UserDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid user ID format', HttpStatus.BAD_REQUEST)
     }
 
     const user = await this.userModel.findById(id).exec()
