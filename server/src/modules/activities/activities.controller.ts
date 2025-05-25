@@ -1,12 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common'
-import { ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common'
+import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 import { ActivitiesService } from './activities.service'
 import { Activity } from './activity.schema'
-import { ActivityDto } from '~types/activity.types'
+import { ActivityDto, ActivitySearchDto, SearchActivityRes, SortField } from '~types/activity.types'
 
 @Controller('activities')
 export class ActivitiesController {
   constructor(private readonly activityService: ActivitiesService) {}
+
+  @ApiOperation({ summary: 'Search activities with pagination and sorting' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of activities with pagination metadata',
+    type: SearchActivityRes,
+  })
+  @ApiQuery({ name: 'query', required: false, type: String, example: '' })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  @ApiQuery({ name: 'sortBy', required: false, enum: SortField })
+  @ApiQuery({ name: 'sortOrder', required: false, enum: ['asc', 'desc'] })
+  @Get('search')
+  searchNutritionProducts(@Query() query: ActivitySearchDto) {
+    return this.activityService.findWithPagination(query)
+  }
 
   @ApiOperation({ summary: 'Get all activities ' })
   @ApiResponse({ status: 200, type: [Activity] })
