@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common'
 import { NutritionProductsService } from './nutrition-products.service'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { NutritionProduct } from './nutrition-product.schema'
@@ -33,7 +33,7 @@ export class NutritionProductsController {
   @ApiOperation({ summary: 'Update nutrition product' })
   @ApiResponse({ status: 200, type: NutritionProduct })
   @UsePipes(ValidationPipe)
-  @Patch('/:id')
+  @Put('/:id')
   updateNutritionProduct(@Param('id') id: string, @Body() dto: NutritionProductDto) {
     return this.nutritionProductService.update(id, dto)
   }
