@@ -137,14 +137,10 @@ export class AuthService {
   }
 
   async confirmResetPasswordCode(dto: ConfirmResetPasswordCodeReq): Promise<void> {
-    if (!isValidObjectId(dto.userId)) {
-      throw new HttpException('Invalid user ID format', HttpStatus.BAD_REQUEST)
-    }
-
-    const user = await this.userModel.findOne({ _id: dto.userId }).exec()
+    const user = await this.userModel.findOne({ email: dto.email }).exec()
 
     if (!user) {
-      throw new HttpException('User not found with this id', HttpStatus.NOT_FOUND)
+      throw new HttpException('User not found with this email', HttpStatus.NOT_FOUND)
     }
 
     if (user.resetPasswordCode !== dto.code) {

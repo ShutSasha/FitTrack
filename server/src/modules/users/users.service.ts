@@ -24,7 +24,7 @@ export class UsersService {
 
     const user = await this.userModel.findById(id).populate('roles').exec()
 
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    if (!user) throw new HttpException('User not found by this id', HttpStatus.NOT_FOUND)
 
     return user
   }
