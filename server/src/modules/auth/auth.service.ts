@@ -23,7 +23,16 @@ export class AuthService {
     const user = await this.validateUser(dto)
 
     if (!user.isEmailConfirmed) {
-      throw new HttpException('Please confirm your email first', HttpStatus.FORBIDDEN)
+      const confirmationToken = uuidv4()
+      user.emailConfirmationToken = confirmationToken
+      await user.save()
+
+      await this.emailService.sendConfirmationEmail(user._id.toString(), confirmationToken)
+
+      throw new HttpException(
+        'Please confirm your email first, the email confirm has been sent to your email',
+        HttpStatus.FORBIDDEN,
+      )
     }
 
     return this.generateTokens(user)
