@@ -24,10 +24,11 @@ export class AuthService {
 
     if (!user.isEmailConfirmed) {
       const confirmationToken = uuidv4()
+
       user.emailConfirmationToken = confirmationToken
       await user.save()
 
-      await this.emailService.sendConfirmationEmail(user._id.toString(), confirmationToken)
+      await this.emailService.sendConfirmationEmail({ email: dto.email, token: confirmationToken })
 
       throw new HttpException(
         'Please confirm your email first, the email confirm has been sent to your email',
@@ -58,7 +59,7 @@ export class AuthService {
       emailConfirmationToken: confirmationToken,
     })
 
-    await this.emailService.sendConfirmationEmail(dto.email, confirmationToken)
+    await this.emailService.sendConfirmationEmail({ email: dto.email, token: confirmationToken })
 
     return this.generateTokens(user)
   }
@@ -99,7 +100,7 @@ export class AuthService {
   }
 
   async resendConfirmationEmail(userId: string): Promise<void> {
-    const user = await this.userModel.findById(userId).exec()
+    const user = await this.usersService.getUserById(userId)
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND)
@@ -113,7 +114,7 @@ export class AuthService {
     user.emailConfirmationToken = confirmationToken
     await user.save()
 
-    await this.emailService.sendConfirmationEmail(user.email, confirmationToken)
+    await this.emailService.sendConfirmationEmail({ email: user.email, token: confirmationToken })
   }
 
   async sendResetPasswordCode(email: string): Promise<void> {
