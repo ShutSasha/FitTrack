@@ -6,6 +6,7 @@ import { MealDto } from '~types/meal.types'
 import { UsersService } from 'modules/users/users.service'
 import { NutritionProductsService } from 'modules/nutrition-products/nutrition-products.service'
 import { Types } from 'mongoose'
+import { DailyLogsService } from 'modules/daily-logs/daily-logs.service'
 
 @Injectable()
 export class MealsService {
@@ -13,6 +14,7 @@ export class MealsService {
     @InjectModel(Meal.name) private mealModel: Model<MealDocument>,
     private readonly userService: UsersService,
     private readonly nutritionProductService: NutritionProductsService,
+    private readonly dailyLogService: DailyLogsService,
   ) {}
 
   async getAllMeals(): Promise<MealDocument[]> {
@@ -32,9 +34,11 @@ export class MealsService {
   }
 
   async addMeal(dto: MealDto): Promise<MealDocument> {
-    await this.userService.getUserById(dto.userId)
-
-    const product = await this.nutritionProductService.getNutritionProductById(dto.nutritionProduct.nutritionProductId)
+    const [dayLog, product] = await Promise.all([
+      this.dailyLogService.getDailyLogByUserIdAndDate(dto.userId, dto.date),
+      this.nutritionProductService.getNutritionProductById(dto.nutritionProduct.nutritionProductId),
+      this.userService.getUserById(dto.userId), // It checks user exist or not
+    ])
 
     const totalCalories = (dto.nutritionProduct.amount / 100) * product.calories
 
@@ -47,9 +51,18 @@ export class MealsService {
         nutritionProductId: new Types.ObjectId(dto.nutritionProduct.nutritionProductId),
         amount: dto.nutritionProduct.amount,
       })
+      await isMealTodayExist.save()
 
-      // TODO this.dailyLogService.addMealToLog(mealId)
-      return isMealTodayExist.save()
+      const mealAlreadyInLog = dayLog.meals.find(meal => meal.equals(isMealTodayExist._id))
+
+      if (!mealAlreadyInLog) {
+        dayLog.meals.push(isMealTodayExist._id)
+        await dayLog.save()
+      }
+
+      await this.dailyLogService.updateCurrentDailyNutrients(dto.userId, dto.date)
+
+      return isMealTodayExist
     }
 
     const meal = new this.mealModel({ totalCalories, ...dto })
@@ -58,9 +71,20 @@ export class MealsService {
       nutritionProductId: new Types.ObjectId(dto.nutritionProduct.nutritionProductId),
       amount: dto.nutritionProduct.amount,
     })
+    await meal.save()
 
-    // TODO this.dailyLogService.addMealToLog(mealId)
-    return meal.save()
+    const mealAlreadyInLog = dayLog.meals.find(meal => meal.equals(meal._id))
+
+    if (!mealAlreadyInLog) {
+      dayLog.meals.push(meal._id)
+      await dayLog.save()
+    }
+
+    dayLog.meals.push(meal._id)
+    await dayLog.save()
+
+    await this.dailyLogService.updateCurrentDailyNutrients(dto.userId, dto.date)
+    return meal
   }
 
   // async mealProductUpdate

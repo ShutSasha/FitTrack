@@ -21,6 +21,10 @@ export class DailyLog {
   @Prop({ default: 0 })
   burnedCalories: number
 
+  @ApiProperty({ example: 300, description: 'The number of calories inluded burned calories' })
+  @Prop({ default: 0 })
+  totalCalories: number
+
   @ApiProperty({ example: ['64eabf891c85a90fc8f3e7e5'], description: 'Array of meals IDs' })
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Meal' }], default: [] })
   meals: Types.ObjectId[]
