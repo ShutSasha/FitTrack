@@ -4,15 +4,17 @@ import { DailyLog, DailyLogDocument } from './daily-log.schema'
 import { isValidObjectId, Model } from 'mongoose'
 import { UsersService } from 'modules/users/users.service'
 import { activityFactors, bodyTypeModifiers, goalModifiers, proteinPerKg } from 'consts/daily-log.consts'
-import { CalculateTargetsDto, CalculateTargetsRes } from '~types/daily-log.types'
+import { CalculateTargetsDto, CalculateTargetsRes, NutritionTotals } from '~types/daily-log.types'
 import { MealDocument } from 'modules/meals/meal.schema'
 import { ActivityDocument } from 'modules/activities/activity.schema'
+import { NutritionProductsService } from 'modules/nutrition-products/nutrition-products.service'
 
 @Injectable()
 export class DailyLogsService {
   constructor(
     @InjectModel(DailyLog.name) private dailyLogModel: Model<DailyLogDocument>,
     private readonly userService: UsersService,
+    private readonly nutritionProductService: NutritionProductsService,
   ) {}
 
   async getAllDailyLogs(): Promise<DailyLogDocument[]> {
@@ -107,7 +109,14 @@ export class DailyLogsService {
     // water: { target: targetWater },
   }
 
-  // TODO считывает и назначает текущие данные в дейли лог юзера. Считает это все по Meals. Вызывается в MealsService после добавление удаления Meal
+  /**
+   * Updates the current daily nutrition values (protein, fat, carbs, water, calories)
+   * for a user on a specific date based on their meals and activities.
+   *
+   * This method should be called after adding or removing a meal,
+   * so that the daily log stays accurate.
+   */
+
   public async updateCurrentDailyNutrients(userId: string, date: Date) {
     const user = await this.userService.getUserById(userId)
 
@@ -117,8 +126,6 @@ export class DailyLogsService {
       .populate<{ activities: { activity: ActivityDocument; totalMinutes: number }[] }>('activities')
       .exec()
 
-    console.log(dailyLog) //при первом запросе meals пустйо, при втором запросе в meals уже два meals как и должно
-
     if (!dailyLog)
       throw new HttpException(
         'Daily log not found by this userID and date, cannot calculate new current daily nutritions and total calories',
@@ -126,7 +133,6 @@ export class DailyLogsService {
       )
 
     const totalCaloriesInMeals = dailyLog.meals.reduce((total, meal) => total + meal.totalCalories, 0)
-
     const burnedCalories = dailyLog.activities.reduce(
       (total, entry) => total + entry.activity.caloriesPerMin * entry.totalMinutes,
       0,
@@ -136,11 +142,52 @@ export class DailyLogsService {
     dailyLog.calories.current = totalCaloriesInMeals
     dailyLog.burnedCalories = burnedCalories
 
-    console.log(`totalCalories: ${totalCaloriesInMeals - burnedCalories}`)
-    console.log(`calories.current: ${totalCaloriesInMeals}`)
+    const meals = dailyLog.meals
 
-    // TODO ДОДЕЛАТЬ ДЛЯ current значений белка, жира и углеводов
+    const nutritionSums = await this.nutritionSums(meals)
+
+    dailyLog.protein.current = Math.round(nutritionSums.currentProtein)
+    dailyLog.fat.current = Math.round(nutritionSums.currentFat)
+    dailyLog.carbs.current = Math.round(nutritionSums.currentCarbs)
+    dailyLog.water.current = Math.round(nutritionSums.currentWater)
 
     await dailyLog.save()
+  }
+
+  private async nutritionSums(meals: MealDocument[]): Promise<NutritionTotals> {
+    const nutritionSums = await Promise.all(
+      meals.map(async meal => {
+        return meal.nutritionProducts.reduce(
+          async (accPromise: Promise<NutritionTotals>, nProductObj) => {
+            const acc = await accPromise
+
+            const product = await this.nutritionProductService.getNutritionProductById(
+              nProductObj.nutritionProductId.toString(),
+            )
+            const amount = nProductObj.amount
+
+            const isWater = product.name === 'Water'
+
+            return {
+              currentProtein: acc.currentProtein + (amount / 100) * product.protein,
+              currentFat: acc.currentFat + (amount / 100) * product.fat,
+              currentCarbs: acc.currentCarbs + (amount / 100) * product.carbs,
+              currentWater: acc.currentWater + (isWater ? amount : 0),
+            }
+          },
+          Promise.resolve({ currentProtein: 0, currentFat: 0, currentCarbs: 0, currentWater: 0 }),
+        )
+      }),
+    )
+
+    return nutritionSums.reduce(
+      (acc, curr) => ({
+        currentProtein: acc.currentProtein + curr.currentProtein,
+        currentFat: acc.currentFat + curr.currentFat,
+        currentCarbs: acc.currentCarbs + curr.currentCarbs,
+        currentWater: acc.currentWater + curr.currentWater,
+      }),
+      { currentProtein: 0, currentFat: 0, currentCarbs: 0, currentWater: 0 },
+    )
   }
 }

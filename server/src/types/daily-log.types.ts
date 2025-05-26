@@ -26,3 +26,10 @@ export class CalculateTargetsRes {
   targetCarbs: number
   targetWater: number
 }
+
+export type NutritionTotals = {
+  currentProtein: number
+  currentFat: number
+  currentCarbs: number
+  currentWater: number
+}
