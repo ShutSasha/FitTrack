@@ -134,7 +134,7 @@ export class DailyLogsService {
     const dailyLog = await this.dailyLogModel
       .findOne({ userId: user._id, date })
       .populate<{ meals: MealDocument[] }>('meals')
-      .populate<{ activities: { activity: ActivityDocument; totalMinutes: number }[] }>('activities')
+      .populate<{ activities: { activity: ActivityDocument; totalMinutes: number }[] }>('activities.activity')
       .exec()
 
     if (!dailyLog)

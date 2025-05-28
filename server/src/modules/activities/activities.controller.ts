@@ -1,8 +1,16 @@
+import { DailyLog } from 'modules/daily-logs/daily-log.schema'
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 import { ActivitiesService } from './activities.service'
 import { Activity } from './activity.schema'
-import { ActivityDto, ActivitySearchDto, SearchActivityRes, SortField } from '~types/activity.types'
+import {
+  ActivityDto,
+  ActivitySearchDto,
+  AddActivityToLogDto,
+  RemoveActivityFromLogDto,
+  SearchActivityRes,
+  SortField,
+} from '~types/activity.types'
 
 @Controller('activities')
 export class ActivitiesController {
@@ -44,6 +52,22 @@ export class ActivitiesController {
   @Post()
   createNutritionProduct(@Body() dto: ActivityDto) {
     return this.activityService.create(dto)
+  }
+
+  @ApiOperation({ summary: 'Add activity to daily log' })
+  @ApiResponse({ status: 200, type: Activity })
+  @UsePipes(ValidationPipe)
+  @Post('/add-to-daily-log')
+  addActivityToDailyLog(@Body() dto: AddActivityToLogDto) {
+    return this.activityService.addActivityToDailyLog(dto)
+  }
+
+  @ApiOperation({ summary: 'Remove activity from daily log' })
+  @ApiResponse({ status: 200, type: DailyLog })
+  @UsePipes(ValidationPipe)
+  @Delete('/remove-from-daily-log')
+  removeActivityFromDailyLog(@Body() dto: RemoveActivityFromLogDto) {
+    return this.activityService.removeActivityFromDailyLog(dto)
   }
 
   @ApiOperation({ summary: 'Update activity' })

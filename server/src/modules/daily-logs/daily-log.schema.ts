@@ -34,10 +34,21 @@ export class DailyLog {
     description: 'Array of activities with their IDs and total minutes',
   })
   @Prop({
-    type: [{ activity: { type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }, totalMinutes: Number }],
+    type: [
+      {
+        activity: { type: mongoose.Schema.Types.ObjectId, ref: 'Activity' },
+        totalMinutes: Number,
+        burnedCalories: Number,
+      },
+    ],
     default: [],
   })
-  activities: { activity: Types.ObjectId; totalMinutes: number }[]
+  activities: {
+    _id?: Types.ObjectId
+    activity: Types.ObjectId
+    totalMinutes: number
+    burnedCalories: number
+  }[]
 
   @ApiProperty({
     example: { current: 1500, target: 2000 },

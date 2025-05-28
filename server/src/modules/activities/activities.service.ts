@@ -2,11 +2,16 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Activity, ActivityDocument } from './activity.schema'
 import { isValidObjectId, Model } from 'mongoose'
-import { ActivityDto, ActivitySearchDto } from '~types/activity.types'
+import { ActivityDto, ActivitySearchDto, AddActivityToLogDto, RemoveActivityFromLogDto } from '~types/activity.types'
+import { DailyLogsService } from 'modules/daily-logs/daily-logs.service'
+import { DailyLogDocument } from 'modules/daily-logs/daily-log.schema'
 
 @Injectable()
 export class ActivitiesService {
-  constructor(@InjectModel(Activity.name) private activityModel: Model<ActivityDocument>) {}
+  constructor(
+    @InjectModel(Activity.name) private activityModel: Model<ActivityDocument>,
+    private readonly dailyLogService: DailyLogsService,
+  ) {}
 
   async findWithPagination(dto: ActivitySearchDto): Promise<{
     items: ActivityDocument[]
@@ -69,6 +74,43 @@ export class ActivitiesService {
     const activity = new this.activityModel(dto)
 
     return activity.save()
+  }
+
+  async addActivityToDailyLog(dto: AddActivityToLogDto): Promise<ActivityDocument> {
+    const [dailyLog, activity] = await Promise.all([
+      this.dailyLogService.getDailyLogByUserIdAndDate(dto.userId, dto.date),
+      this.getActivityById(dto.activityId),
+    ])
+
+    const burnedCalories = activity.caloriesPerMin * dto.totalMinutes
+
+    dailyLog.activities.push({
+      activity: activity._id,
+      totalMinutes: dto.totalMinutes,
+      burnedCalories,
+    })
+    dailyLog.save()
+
+    await this.dailyLogService.updateCurrentDailyNutrients(dailyLog.userId.toString(), dailyLog.date)
+
+    return activity
+  }
+
+  async removeActivityFromDailyLog(dto: RemoveActivityFromLogDto): Promise<DailyLogDocument> {
+    const dailyLog = await this.dailyLogService.getDailyLogByUserIdAndDate(dto.userId, dto.date)
+
+    const deletedActivity = dailyLog.activities.find(activity => activity._id.equals(dto.activityId))
+
+    if (!deletedActivity) {
+      throw new HttpException('Activity with this unique ObjectId NOT FOUND', HttpStatus.BAD_REQUEST)
+    }
+
+    dailyLog.activities = dailyLog.activities.filter(activity => !activity._id.equals(dto.activityId))
+    dailyLog.save()
+
+    await this.dailyLogService.updateCurrentDailyNutrients(dailyLog.userId.toString(), dailyLog.date)
+
+    return dailyLog
   }
 
   async update(id: string, dto: ActivityDto): Promise<ActivityDocument> {
