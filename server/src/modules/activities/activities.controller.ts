@@ -7,6 +7,7 @@ import {
   ActivityDto,
   ActivitySearchDto,
   AddActivityToLogDto,
+  EditActivityInLogDto,
   RemoveActivityFromLogDto,
   SearchActivityRes,
   SortField,
@@ -68,6 +69,14 @@ export class ActivitiesController {
   @Delete('/remove-from-daily-log')
   removeActivityFromDailyLog(@Body() dto: RemoveActivityFromLogDto) {
     return this.activityService.removeActivityFromDailyLog(dto)
+  }
+
+  @ApiOperation({ summary: 'Edit activity from daily log' })
+  @ApiResponse({ status: 200, type: DailyLog })
+  @UsePipes(ValidationPipe)
+  @Put('/edit-from-daily-log')
+  editActivityFromDailyLog(@Body() dto: EditActivityInLogDto) {
+    return this.activityService.editActivityInDailyLog(dto)
   }
 
   @ApiOperation({ summary: 'Update activity' })

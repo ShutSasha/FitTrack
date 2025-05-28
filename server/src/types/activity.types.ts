@@ -143,3 +143,36 @@ export class RemoveActivityFromLogDto {
   @IsNotEmpty()
   activityId: string
 }
+
+export class EditActivityInLogDto {
+  @ApiProperty({
+    example: '152789891kfgs7583729853hdkf1276',
+    description: 'The field should contain user id in ObjectId type',
+  })
+  @IsString()
+  @IsNotEmpty()
+  userId: string
+
+  @ApiProperty({
+    example: '2025-05-26',
+    description: 'The field should contain date of the daily log',
+  })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'Date must be in format YYYY-MM-DD' })
+  date: Date
+
+  @ApiProperty({
+    example: '152789891kfgs7583729853hdkf1276',
+    description: 'The field should contain activity id in ObjectId type (in array activities property - _id)',
+  })
+  @IsString()
+  @IsNotEmpty()
+  activityId: string
+
+  @ApiProperty({
+    example: '20',
+    description: 'The field should contain minutes of train',
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  totalMinutes: number
+}

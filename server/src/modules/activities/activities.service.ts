@@ -2,7 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Activity, ActivityDocument } from './activity.schema'
 import { isValidObjectId, Model } from 'mongoose'
-import { ActivityDto, ActivitySearchDto, AddActivityToLogDto, RemoveActivityFromLogDto } from '~types/activity.types'
+import {
+  ActivityDto,
+  ActivitySearchDto,
+  AddActivityToLogDto,
+  EditActivityInLogDto,
+  RemoveActivityFromLogDto,
+} from '~types/activity.types'
 import { DailyLogsService } from 'modules/daily-logs/daily-logs.service'
 import { DailyLogDocument } from 'modules/daily-logs/daily-log.schema'
 
@@ -107,6 +113,26 @@ export class ActivitiesService {
 
     dailyLog.activities = dailyLog.activities.filter(activity => !activity._id.equals(dto.activityId))
     dailyLog.save()
+
+    await this.dailyLogService.updateCurrentDailyNutrients(dailyLog.userId.toString(), dailyLog.date)
+
+    return dailyLog
+  }
+
+  async editActivityInDailyLog(dto: EditActivityInLogDto): Promise<DailyLogDocument> {
+    const dailyLog = await this.dailyLogService.getDailyLogByUserIdAndDate(dto.userId, dto.date)
+
+    const activityToUpdate = dailyLog.activities.find(act => act._id.equals(dto.activityId))
+    const activity = await this.getActivityById(activityToUpdate.activity.toString())
+
+    if (!activityToUpdate) {
+      throw new HttpException('Activity with this unique ObjectId NOT FOUND', HttpStatus.BAD_REQUEST)
+    }
+
+    activityToUpdate.totalMinutes = dto.totalMinutes
+    activityToUpdate.burnedCalories = activity.caloriesPerMin * dto.totalMinutes
+
+    await dailyLog.save()
 
     await this.dailyLogService.updateCurrentDailyNutrients(dailyLog.userId.toString(), dailyLog.date)
 
