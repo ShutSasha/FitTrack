@@ -48,6 +48,7 @@ export class MealsService {
       nutritionProductId: new Types.ObjectId(dto.nutritionProduct.nutritionProductId),
       amount: dto.nutritionProduct.amount,
       productCalories,
+      productName: product.name,
     }
 
     if (meal) {

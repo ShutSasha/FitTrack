@@ -36,6 +36,8 @@ export class Meal {
         _id: '66522f8b9b8cbe5d1d25ab9c',
         nutritionProductId: '64eabf891c85a90fc8f3e7e5',
         amount: 100,
+        productName: 'Salmon',
+        productCalories: 204,
       },
     ],
     description: 'Array of nutrition products with their IDs and amounts (in grams)',
@@ -46,6 +48,7 @@ export class Meal {
         nutritionProductId: { type: mongoose.Schema.Types.ObjectId, ref: 'NutritionProduct' },
         amount: Number,
         productCalories: Number,
+        productName: String,
       },
     ],
     default: [],
@@ -54,6 +57,7 @@ export class Meal {
     _id?: Types.ObjectId
     nutritionProductId: Types.ObjectId
     amount: number
+    productName: string
     productCalories: number
   }[]
 }
