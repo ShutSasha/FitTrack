@@ -30,7 +30,7 @@ export class MealsController {
     return this.mealService.addMeal(dto)
   }
 
-  @ApiOperation({ summary: 'Delete meal by id' })
+  @ApiOperation({ summary: '(Dev generally)  Delete meal by id' })
   @ApiResponse({ status: 200, type: Meal })
   @Delete('/:id')
   deleteMeal(@Param('id') id: string) {
@@ -39,7 +39,7 @@ export class MealsController {
 
   @Delete('/:mealId/:nutritionEntryId')
   @ApiOperation({
-    summary: 'Delete a nutrition product entry in a meal by mealId and the entry’s unique _id',
+    summary: '(Prod) Delete a nutrition product entry in a meal by mealId and the entry’s unique _id',
   })
   @ApiParam({
     name: 'mealId',

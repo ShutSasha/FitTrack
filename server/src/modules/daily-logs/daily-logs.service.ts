@@ -33,6 +33,18 @@ export class DailyLogsService {
     return dailyLog
   }
 
+  async getDailyLogByMealId(mealId: string): Promise<DailyLogDocument> {
+    if (!isValidObjectId(mealId)) {
+      throw new HttpException('Invalid meal ID format', HttpStatus.BAD_REQUEST)
+    }
+
+    const meal = await this.dailyLogModel.findOne({ meals: mealId }).exec()
+
+    if (!meal) throw new HttpException('Meal by this id not found', HttpStatus.NOT_FOUND)
+
+    return meal
+  }
+
   async getDailyLogByUserIdAndDate(userId: string, date: Date): Promise<DailyLogDocument> {
     // It gets user by id and at the same time check valid ObjectId
     const user = await this.userService.getUserById(userId)

@@ -75,9 +75,7 @@ export class MealsService {
     }
   }
 
-  // async mealProductUpdate
-
-  async delete(id: string): Promise<MealDocument> {
+  async delete(id: string): Promise<any> {
     if (!isValidObjectId(id)) {
       throw new HttpException('Invalid Meal ID format', HttpStatus.BAD_REQUEST)
     }
@@ -88,7 +86,14 @@ export class MealsService {
       throw new HttpException('Meal by this id not found', HttpStatus.NOT_FOUND)
     }
 
+    const dailyLog = await this.dailyLogService.getDailyLogByMealId(id)
+
+    dailyLog.meals = dailyLog.meals.filter(meal => !meal.equals(id))
+    await dailyLog.save()
+
     const deletedMeal = await this.mealModel.findByIdAndDelete(id).exec()
+
+    this.dailyLogService.updateCurrentDailyNutrients(dailyLog.userId.toString(), dailyLog.date)
 
     return deletedMeal
   }
