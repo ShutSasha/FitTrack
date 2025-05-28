@@ -49,7 +49,7 @@ export class DailyLogsService {
     // It gets user by id and at the same time check valid ObjectId
     const user = await this.userService.getUserById(userId)
 
-    const dailyLog = await this.dailyLogModel.findOne({ userId, date }).exec()
+    const dailyLog = await this.dailyLogModel.findOne({ userId, date }).populate('meals').exec()
 
     if (dailyLog) return dailyLog
 
