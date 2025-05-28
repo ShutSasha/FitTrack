@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsEnum, IsNotEmpty } from 'class-validator'
+import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator'
 import { MealTypes } from 'consts/meals.consts'
 
 export class MealDto {
@@ -83,4 +83,50 @@ export class DeleteNutritionProductInMealResponse {
     example: 'Meal document has been deleted totally cause nutritionProducts array is empty',
   })
   readonly message: string
+}
+
+export class EditNutritionProductInMealDto {
+  @ApiProperty({
+    example: '603467896473967843',
+    description: `User id in ObjectId`,
+  })
+  userId: string
+
+  @ApiProperty({
+    example: '2025-05-25',
+    description: 'The date of the meal',
+  })
+  date: Date
+
+  @ApiProperty({
+    example: '603467896473967843',
+    description: `Meal id in ObjectId`,
+  })
+  mealId: string
+
+  @ApiProperty({
+    example: '603467896473967843',
+    description: `Nutrition product id in ObjectId, unique value for object`,
+  })
+  _idForNutritionProduct: string
+
+  @ApiProperty({
+    example: 'Lunch',
+    description: `Type of the meal ${MealTypes.join(', ')}`,
+    enum: MealTypes,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  amount: number
+
+  @ApiProperty({
+    example: 'Lunch',
+    description: `Type of the meal ${MealTypes.join(', ')}`,
+    enum: MealTypes,
+  })
+  @IsEnum(MealTypes, {
+    message: `Meal type must be one of: ${MealTypes.join(', ')}`,
+  })
+  @IsNotEmpty()
+  type: string
 }

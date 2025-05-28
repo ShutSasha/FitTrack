@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 import { MealsService } from './meals.service'
 import { Meal } from './meal.schema'
-import { DeleteNutritionProductInMealResponse, MealDto } from '~types/meal.types'
+import { DeleteNutritionProductInMealResponse, EditNutritionProductInMealDto, MealDto } from '~types/meal.types'
 
 @ApiExtraModels(Meal, DeleteNutritionProductInMealResponse)
 @Controller('meals')
@@ -29,6 +29,14 @@ export class MealsController {
   @Post()
   addMeal(@Body() dto: MealDto) {
     return this.mealService.addMeal(dto)
+  }
+
+  @ApiOperation({ summary: 'Edit nutrition product in meal' })
+  @ApiResponse({ status: 200, type: Meal })
+  @UsePipes(ValidationPipe)
+  @Put()
+  editMeal(@Body() dto: EditNutritionProductInMealDto) {
+    return this.mealService.editNutritionProductInMeal(dto)
   }
 
   @ApiOperation({ summary: '(Dev generally)  Delete meal by id' })

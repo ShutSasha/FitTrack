@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Meal, MealDocument } from './meal.schema'
 import { isValidObjectId, Model } from 'mongoose'
-import { MealDto } from '~types/meal.types'
+import { EditNutritionProductInMealDto, MealDto } from '~types/meal.types'
 import { UsersService } from 'modules/users/users.service'
 import { NutritionProductsService } from 'modules/nutrition-products/nutrition-products.service'
 import { Types } from 'mongoose'
@@ -76,6 +76,73 @@ export class MealsService {
       dayLog.meals.push(mealId)
       await dayLog.save()
     }
+  }
+
+  async editNutritionProductInMeal(dto: EditNutritionProductInMealDto): Promise<MealDocument> {
+    const dayLog = await this.dailyLogService.getDailyLogByUserIdAndDate(dto.userId, dto.date)
+    await this.userService.getUserById(dto.userId)
+
+    const meal = await this.mealModel.findById(dto.mealId)
+    if (!meal) throw new HttpException('Meal with this id not found ', HttpStatus.NOT_FOUND)
+    const productEntry = meal.nutritionProducts.find(entry => entry._id.equals(dto._idForNutritionProduct))
+    if (!productEntry) throw new HttpException('Product not found in meal', HttpStatus.NOT_FOUND)
+
+    const product = await this.nutritionProductService.getNutritionProductById(
+      productEntry.nutritionProductId.toString(),
+    )
+
+    let resultMeal = meal
+
+    if (meal.type === dto.type) {
+      productEntry.amount = dto.amount
+      productEntry.productCalories = (dto.amount / 100) * product.calories
+      meal.totalCalories = meal.nutritionProducts.reduce((total, product) => total + product.productCalories, 0)
+      await meal.save()
+      resultMeal = meal
+    } else {
+      meal.nutritionProducts = meal.nutritionProducts.filter(entry => !entry._id.equals(dto._idForNutritionProduct))
+      meal.totalCalories = meal.nutritionProducts.reduce((total, product) => total + product.productCalories, 0)
+      await meal.save()
+      if (meal.nutritionProducts.length === 0) {
+        await this.delete(meal._id.toString())
+      }
+
+      const isMealWithNewTypeExist = await this.mealModel.findOne({
+        userId: dto.userId,
+        date: dto.date,
+        type: dto.type,
+      })
+
+      const productCalories = (dto.amount / 100) * product.calories
+
+      const nutritionProductEntry = {
+        nutritionProductId: new Types.ObjectId(product._id),
+        amount: dto.amount,
+        productCalories,
+        productName: product.name,
+      }
+
+      if (isMealWithNewTypeExist) {
+        isMealWithNewTypeExist.nutritionProducts.push(nutritionProductEntry)
+        isMealWithNewTypeExist.totalCalories = isMealWithNewTypeExist.nutritionProducts.reduce(
+          (total, product) => total + product.productCalories,
+          0,
+        )
+        await isMealWithNewTypeExist.save()
+        resultMeal = isMealWithNewTypeExist
+      } else {
+        const newMeal = new this.mealModel({ userId: dto.userId, type: dto.type, date: dto.date })
+        newMeal.nutritionProducts.push(nutritionProductEntry)
+        newMeal.totalCalories = nutritionProductEntry.productCalories
+        await newMeal.save()
+        resultMeal = newMeal
+      }
+    }
+    await this.addMealToDayLogIfNotExists(dayLog, resultMeal._id)
+
+    await this.dailyLogService.updateCurrentDailyNutrients(dto.userId, dto.date)
+
+    return resultMeal
   }
 
   async delete(id: string): Promise<any> {
