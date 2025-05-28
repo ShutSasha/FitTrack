@@ -94,6 +94,7 @@ export class ActivitiesService {
       activity: activity._id,
       totalMinutes: dto.totalMinutes,
       burnedCalories,
+      activityName: activity.name,
     })
     dailyLog.save()
 

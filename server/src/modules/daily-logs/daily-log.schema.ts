@@ -30,7 +30,15 @@ export class DailyLog {
   meals: Types.ObjectId[]
 
   @ApiProperty({
-    example: [{ activity: '64eabf891c85a90fc8f3e7e5', totalMinutes: 30 }],
+    example: [
+      {
+        _id: '1235136366ksdj3562',
+        activity: '64eabf891c85a90fc8f3e7e5',
+        totalMinutes: 30,
+        burnedCalories: 400,
+        activityName: 'Running',
+      },
+    ],
     description: 'Array of activities with their IDs and total minutes',
   })
   @Prop({
@@ -39,6 +47,7 @@ export class DailyLog {
         activity: { type: mongoose.Schema.Types.ObjectId, ref: 'Activity' },
         totalMinutes: Number,
         burnedCalories: Number,
+        activityName: String,
       },
     ],
     default: [],
@@ -48,6 +57,7 @@ export class DailyLog {
     activity: Types.ObjectId
     totalMinutes: number
     burnedCalories: number
+    activityName: string
   }[]
 
   @ApiProperty({
