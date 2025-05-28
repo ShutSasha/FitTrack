@@ -101,10 +101,15 @@ export class MealsService {
   async deleteNutritionProduct(mealId: string, nutritionEntryId: string): Promise<MealDocument> {
     const meal = await this.getMealById(mealId)
 
+    const dailyLog = await this.dailyLogService.getDailyLogByMealId(meal._id.toString())
+
     const deletedNutritionEntryInMeal = meal.nutritionProducts.find(item => item._id.equals(nutritionEntryId))
 
     if (!deletedNutritionEntryInMeal) {
-      throw new HttpException('deleted nutrition entry in meal not found', HttpStatus.BAD_REQUEST)
+      throw new HttpException(
+        'deleted nutrition entry in meal not found by this nutritionEntryId',
+        HttpStatus.BAD_REQUEST,
+      )
     }
 
     const product = await this.nutritionProductService.getNutritionProductById(
@@ -116,8 +121,17 @@ export class MealsService {
     )
 
     meal.totalCalories -= (deletedNutritionEntryInMeal.amount / 100) * product.calories
+    await meal.save()
+    await this.dailyLogService.updateCurrentDailyNutrients(dailyLog.userId.toString(), dailyLog.date)
 
-    meal.save()
+    if (meal.nutritionProducts.length === 0) {
+      await this.delete(meal._id.toString())
+
+      throw new HttpException(
+        { message: 'Meal document has been deleted totally cause nutritionProducts array is empty' },
+        HttpStatus.CREATED,
+      )
+    }
 
     return meal
   }

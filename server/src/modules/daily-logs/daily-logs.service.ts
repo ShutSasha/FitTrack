@@ -128,7 +128,6 @@ export class DailyLogsService {
    * This method should be called after adding or removing a meal,
    * so that the daily log stays accurate.
    */
-
   public async updateCurrentDailyNutrients(userId: string, date: Date) {
     const user = await this.userService.getUserById(userId)
 

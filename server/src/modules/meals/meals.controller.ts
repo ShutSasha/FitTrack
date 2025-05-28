@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common'
-import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
+import { ApiExtraModels, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger'
 import { MealsService } from './meals.service'
 import { Meal } from './meal.schema'
-import { MealDto } from '~types/meal.types'
+import { DeleteNutritionProductInMealResponse, MealDto } from '~types/meal.types'
 
+@ApiExtraModels(Meal, DeleteNutritionProductInMealResponse)
 @Controller('meals')
 export class MealsController {
   constructor(private readonly mealService: MealsService) {}
@@ -51,7 +52,8 @@ export class MealsController {
     description: 'Unique _id of the nutrition entry inside the meal.nutritionProducts array',
     example: '6651ba087b9e6a4ad8dbb128',
   })
-  @ApiResponse({ status: 200, type: Meal })
+  @ApiResponse({ status: 200, description: 'Meal returned', type: Meal })
+  @ApiResponse({ status: 201, description: 'Meal deleted totally', type: DeleteNutritionProductInMealResponse })
   deleteNutritionProductInMeal(@Param('mealId') mealId: string, @Param('nutritionEntryId') nutritionEntryId: string) {
     return this.mealService.deleteNutritionProduct(mealId, nutritionEntryId)
   }

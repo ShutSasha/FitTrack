@@ -77,3 +77,10 @@ export class MealUpdateBody {
     amount: number
   }[]
 }
+
+export class DeleteNutritionProductInMealResponse {
+  @ApiProperty({
+    example: 'Meal document has been deleted totally cause nutritionProducts array is empty',
+  })
+  readonly message: string
+}
