@@ -41,24 +41,26 @@ export class MealsService {
       this.userService.getUserById(dto.userId), // It checks user exist or not
     ])
 
-    const totalCalories = (dto.nutritionProduct.amount / 100) * product.calories
-
     let meal = await this.mealModel.findOne({ userId: dto.userId, type: dto.type, date: dto.date })
+    const productCalories = (dto.nutritionProduct.amount / 100) * product.calories
 
     const nutritionProductEntry = {
       nutritionProductId: new Types.ObjectId(dto.nutritionProduct.nutritionProductId),
       amount: dto.nutritionProduct.amount,
+      productCalories,
     }
 
     if (meal) {
-      meal.totalCalories += totalCalories
       meal.nutritionProducts.push(nutritionProductEntry)
-      await meal.save()
     } else {
-      meal = new this.mealModel({ totalCalories, ...dto })
+      meal = new this.mealModel({ ...dto })
       meal.nutritionProducts.push(nutritionProductEntry)
-      await meal.save()
     }
+    await meal.save()
+
+    const totalCalories = meal.nutritionProducts.reduce((total, product) => total + product.productCalories, 0)
+    meal.totalCalories = totalCalories
+    await meal.save()
 
     await this.addMealToDayLogIfNotExists(dayLog, meal._id)
 

@@ -45,6 +45,7 @@ export class Meal {
       {
         nutritionProductId: { type: mongoose.Schema.Types.ObjectId, ref: 'NutritionProduct' },
         amount: Number,
+        productCalories: Number,
       },
     ],
     default: [],
@@ -53,6 +54,7 @@ export class Meal {
     _id?: Types.ObjectId
     nutritionProductId: Types.ObjectId
     amount: number
+    productCalories: number
   }[]
 }
 
