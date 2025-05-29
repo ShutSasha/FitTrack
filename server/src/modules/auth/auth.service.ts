@@ -182,7 +182,7 @@ export class AuthService {
   }
 
   private async validateUser(dto: CreateUserDto): Promise<UserDocument> {
-    const user = await this.usersService.getUserByUsername(dto.username)
+    const user = await this.usersService.getUserByUsernameAndEmail(dto.username, dto.email)
 
     if (!user) throw new HttpException('User with this username has been not found', HttpStatus.NOT_FOUND)
 

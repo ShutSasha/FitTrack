@@ -9,6 +9,7 @@ import { DailyLogsModule } from 'modules/daily-logs/daily-logs.module'
 import { MealsModule } from 'modules/meals/meals.module'
 import { ActivitiesModule } from 'modules/activities/activities.module'
 import { NutritionProductsModule } from 'modules/nutrition-products/nutrition-products.module'
+import { ProductRequestsModule } from 'modules/product-requests/product-requests.module'
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { NutritionProductsModule } from 'modules/nutrition-products/nutrition-pr
     MealsModule,
     ActivitiesModule,
     NutritionProductsModule,
+    ProductRequestsModule,
   ],
 })
 export class AppModule {}

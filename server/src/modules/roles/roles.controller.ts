@@ -27,8 +27,8 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Get all roles ' })
   @ApiResponse({ status: 200, type: [Role] })
-  // @Roles('ADMIN')
-  // @UseGuards(RolesGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
   getRoles() {
@@ -48,8 +48,8 @@ export class RolesController {
   @ApiOperation({ summary: 'Create role' })
   @ApiResponse({ status: 201, type: Role })
   @UsePipes(ValidationPipe)
-  // @Roles('ADMIN')
-  // @UseGuards(RolesGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateRoleDto) {
@@ -60,8 +60,8 @@ export class RolesController {
   @ApiOperation({ summary: 'Update role' })
   @ApiResponse({ status: 200, type: Role })
   @UsePipes(ValidationPipe)
-  // @Roles('ADMIN')
-  // @UseGuards(RolesGuard)
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
   @Patch()
   @HttpCode(HttpStatus.OK)
   update(@Body() dto: UpdateRoleDto) {

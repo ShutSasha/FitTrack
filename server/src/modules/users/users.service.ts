@@ -29,10 +29,10 @@ export class UsersService {
     return user
   }
 
-  async getUserByUsername(username: string): Promise<UserDocument> {
-    const user = await this.userModel.findOne({ username }).populate('roles').exec()
+  async getUserByUsernameAndEmail(username: string, email: string): Promise<UserDocument> {
+    const user = await this.userModel.findOne({ username, email }).populate('roles').exec()
 
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    if (!user) throw new HttpException('User not found with this email and username', HttpStatus.NOT_FOUND)
 
     return user
   }

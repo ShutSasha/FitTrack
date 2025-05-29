@@ -3,15 +3,15 @@ import { ApiProperty } from '@nestjs/swagger'
 import { ProductTypes } from 'consts/products.consts'
 import { HydratedDocument, Types } from 'mongoose'
 
-export type NutritionProductDocument = HydratedDocument<NutritionProduct>
+export type ProductRequestDocument = HydratedDocument<ProductRequest>
 
 @Schema({ timestamps: true })
-export class NutritionProduct {
+export class ProductRequest {
   @ApiProperty({ example: '67cef3dfd47b32d7c0f129b0', description: 'Unique identifier of the nutrition product' })
   _id: Types.ObjectId
 
   @ApiProperty({ example: 'Apple', description: 'Name of the nutrition product' })
-  @Prop({ type: String, required: true, unique: true })
+  @Prop({ type: String, required: true })
   name: string
 
   @ApiProperty({ example: 52, description: 'Calories per 100g of the nutrition product' })
@@ -39,4 +39,4 @@ export class NutritionProduct {
   productType: string
 }
 
-export const NutritionProductSchema = SchemaFactory.createForClass(NutritionProduct)
+export const ProductRequestSchema = SchemaFactory.createForClass(ProductRequest)
