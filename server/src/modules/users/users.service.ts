@@ -28,7 +28,7 @@ export class UsersService {
     const skip = (page - 1) * limit
 
     const [items, total] = await Promise.all([
-      this.userModel.find(filter).skip(skip).limit(limit).exec(),
+      this.userModel.find(filter).skip(skip).limit(limit).populate('roles').exec(),
       this.userModel.countDocuments(filter).exec(),
     ])
 
