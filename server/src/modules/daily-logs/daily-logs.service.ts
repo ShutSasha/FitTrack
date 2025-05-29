@@ -67,6 +67,8 @@ export class DailyLogsService {
     dailyLog.fat.target = targets.targetFat
     dailyLog.carbs.target = targets.targetCarbs
     dailyLog.water.target = targets.targetWater
+    dailyLog.weight.current = user.weight
+    dailyLog.weight.target = user.targetWeight
     dailyLog.save()
 
     if (dailyLog) return dailyLog
