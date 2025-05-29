@@ -3,7 +3,7 @@ import { Model, Types, isValidObjectId } from 'mongoose'
 import { User, UserDocument } from './users.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { RolesService } from '../roles/roles.service'
-import { CreateUserDto } from '~types/users.types'
+import { CreateUserDto, UsersSearchDto } from '~types/users.types'
 
 @Injectable()
 export class UsersService {
@@ -11,6 +11,34 @@ export class UsersService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly rolesService: RolesService,
   ) {}
+
+  async findWithPagination(dto: UsersSearchDto): Promise<{
+    items: UserDocument[]
+    total: number
+    page: number
+    limit: number
+  }> {
+    const { query, page = 1, limit = 10 } = dto
+
+    const filter: any = {}
+    if (query) {
+      filter.username = { $regex: query, $options: 'i' }
+    }
+
+    const skip = (page - 1) * limit
+
+    const [items, total] = await Promise.all([
+      this.userModel.find(filter).skip(skip).limit(limit).exec(),
+      this.userModel.countDocuments(filter).exec(),
+    ])
+
+    return {
+      items: items,
+      total,
+      page,
+      limit,
+    }
+  }
 
   async getAllUsers(): Promise<UserDocument[]> {
     const users = await this.userModel.find().populate('roles').exec()
