@@ -83,7 +83,7 @@ export class DailyLogsService {
     return newDailyLog.save()
   }
 
-  private calculateTargets(user: CalculateTargetsDto): CalculateTargetsRes {
+  public calculateTargets(user: CalculateTargetsDto): CalculateTargetsRes {
     const age = new Date().getFullYear() - new Date(user.birthDate).getFullYear()
 
     const genderModifier = user.gender === 'male' ? 5 : user.gender === 'female' ? -161 : -78 // -78 avarage for other gender
@@ -96,7 +96,15 @@ export class DailyLogsService {
     const goalModifier = goalModifiers[user.goalType] || 1.0
     const bodyTypelModifier = bodyTypeModifiers[user.bodyType] || 1.0
 
-    const totalCalories = bmr * activityFactor * goalModifier * bodyTypelModifier
+    let weightModifier = 1.0
+    const weightDiff = user.targetWeight - user.weight
+    if (weightDiff < -3) {
+      weightModifier = 0.85
+    } else if (weightDiff > 3) {
+      weightModifier = 1.15
+    }
+
+    const totalCalories = bmr * activityFactor * goalModifier * bodyTypelModifier * weightModifier
 
     const protein = proteinPerKg[user.goalType] * user.weight
     const fat = 0.9 * user.weight
@@ -114,11 +122,6 @@ export class DailyLogsService {
       targetCarbs: Math.round(carbs),
       targetWater: Math.round(water),
     }
-  }
-
-  // TODO дергается после персонализации и апдейтит только сегоднешний лог, все предыдущие это история
-  public updateTodayDailyLogTargets() {
-    // water: { target: targetWater },
   }
 
   /**

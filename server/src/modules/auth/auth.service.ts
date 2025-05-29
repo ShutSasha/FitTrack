@@ -9,6 +9,7 @@ import { CreateUserDto } from '~types/users.types'
 import { ConfirmResetPasswordCodeReq, PersonalizeDto, RegisterUserDto, TokensRes } from '~types/auth.types'
 import { EmailService } from 'modules/email/email.service'
 import { v4 as uuidv4 } from 'uuid'
+import { DailyLogsService } from 'modules/daily-logs/daily-logs.service'
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
+    private readonly dailyLogService: DailyLogsService,
   ) {}
 
   async login(dto: CreateUserDto): Promise<TokensRes> {
@@ -84,7 +86,30 @@ export class AuthService {
 
     await candidate.save()
 
-    return candidate
+    const targets = this.dailyLogService.calculateTargets({
+      gender: dto.gender,
+      height: dto.height,
+      weight: dto.weight,
+      bodyType: dto.bodyType,
+      activityLevel: dto.activityLevel,
+      birthDate: new Date(dto.birthDate),
+      goalType: dto.goalType,
+      targetWeight: dto.targetWeight,
+    })
+
+    const dailyLog = await this.dailyLogService.getDailyLogByUserIdAndDate(
+      candidate._id.toString(),
+      new Date(dto.currentDate),
+    )
+
+    dailyLog.calories.target = targets.targetCalories
+    dailyLog.protein.target = targets.targetProtein
+    dailyLog.fat.target = targets.targetFat
+    dailyLog.carbs.target = targets.targetCarbs
+    dailyLog.water.target = targets.targetWater
+    dailyLog.save()
+
+    return candidate.save()
   }
 
   async confirmEmail(token: string): Promise<void> {

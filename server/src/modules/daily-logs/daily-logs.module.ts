@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 import { DailyLogsController } from './daily-logs.controller'
 import { DailyLogsService } from './daily-logs.service'
 import { MongooseModule } from '@nestjs/mongoose'
@@ -9,7 +9,7 @@ import { NutritionProductsModule } from 'modules/nutrition-products/nutrition-pr
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: DailyLog.name, schema: DailyLogSchema }]),
-    UsersModule,
+    forwardRef(() => UsersModule),
     NutritionProductsModule,
   ],
   controllers: [DailyLogsController],

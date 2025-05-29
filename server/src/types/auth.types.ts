@@ -121,6 +121,16 @@ export class PersonalizeDto {
   readonly userId: string
 
   @ApiProperty({
+    description: 'The current date yyyy-mm-dd format',
+    example: '1990.01.01',
+  })
+  @IsDateString(
+    { strict: true },
+    { message: 'Current date must be a valid date in yyyy-mm-dd format (e.g., 1990-01-29)' },
+  )
+  currentDate: string
+
+  @ApiProperty({
     description: 'The gender of the user',
     example: 'male',
     enum: ['male', 'female', 'other'],
