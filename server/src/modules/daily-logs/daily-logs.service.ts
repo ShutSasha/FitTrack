@@ -51,13 +51,6 @@ export class DailyLogsService {
 
     const dailyLog = await this.dailyLogModel.findOne({ userId, date }).populate('meals').exec()
 
-    if (dailyLog) return dailyLog
-
-    const weight = {
-      current: user.weight,
-      target: user.targetWeight,
-    }
-
     const targets = this.calculateTargets({
       gender: user.gender,
       height: user.height,
@@ -68,6 +61,20 @@ export class DailyLogsService {
       goalType: user.goalType,
       targetWeight: user.targetWeight,
     })
+
+    dailyLog.calories.target = targets.targetCalories
+    dailyLog.protein.target = targets.targetProtein
+    dailyLog.fat.target = targets.targetFat
+    dailyLog.carbs.target = targets.targetCarbs
+    dailyLog.water.target = targets.targetWater
+    dailyLog.save()
+
+    if (dailyLog) return dailyLog
+
+    const weight = {
+      current: user.weight,
+      target: user.targetWeight,
+    }
 
     const newDailyLog = new this.dailyLogModel({
       date,
