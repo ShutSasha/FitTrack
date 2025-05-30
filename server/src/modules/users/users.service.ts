@@ -3,7 +3,7 @@ import { Model, Types, isValidObjectId } from 'mongoose'
 import { User, UserDocument } from './users.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { RolesService } from '../roles/roles.service'
-import { CreateUserDto } from '~types/users.types'
+import { CreateUserDto, UsersSearchDto } from '~types/users.types'
 
 @Injectable()
 export class UsersService {
@@ -12,6 +12,34 @@ export class UsersService {
     private readonly rolesService: RolesService,
   ) {}
 
+  async findWithPagination(dto: UsersSearchDto): Promise<{
+    items: UserDocument[]
+    total: number
+    page: number
+    limit: number
+  }> {
+    const { query, page = 1, limit = 10 } = dto
+
+    const filter: any = {}
+    if (query) {
+      filter.username = { $regex: query, $options: 'i' }
+    }
+
+    const skip = (page - 1) * limit
+
+    const [items, total] = await Promise.all([
+      this.userModel.find(filter).skip(skip).limit(limit).populate('roles').exec(),
+      this.userModel.countDocuments(filter).exec(),
+    ])
+
+    return {
+      items: items,
+      total,
+      page,
+      limit,
+    }
+  }
+
   async getAllUsers(): Promise<UserDocument[]> {
     const users = await this.userModel.find().populate('roles').exec()
     return users
@@ -19,20 +47,20 @@ export class UsersService {
 
   async getUserById(id: string): Promise<UserDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid user ID format', HttpStatus.BAD_REQUEST)
     }
 
     const user = await this.userModel.findById(id).populate('roles').exec()
 
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    if (!user) throw new HttpException('User not found by this id', HttpStatus.NOT_FOUND)
 
     return user
   }
 
-  async getUserByUsername(username: string): Promise<UserDocument> {
-    const user = await this.userModel.findOne({ username }).populate('roles').exec()
+  async getUserByUsernameAndEmail(username: string, email: string): Promise<UserDocument> {
+    const user = await this.userModel.findOne({ username, email }).populate('roles').exec()
 
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    if (!user) throw new HttpException('User not found with this email and username', HttpStatus.NOT_FOUND)
 
     return user
   }
@@ -54,7 +82,7 @@ export class UsersService {
 
   async delete(id: string): Promise<UserDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid user ID format', HttpStatus.BAD_REQUEST)
     }
 
     const user = await this.userModel.findById(id).exec()

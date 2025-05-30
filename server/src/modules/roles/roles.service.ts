@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Role, RoleDocument } from './roles.schema'
 import { isValidObjectId, Model } from 'mongoose'
 import { User, UserDocument } from '../users/users.schema'
-import { CreateRoleDto, UpdateRoleDto } from '~types/roles.types'
+import { ChangeRoleDto, CreateRoleDto, UpdateRoleDto } from '~types/roles.types'
 
 @Injectable()
 export class RolesService {
@@ -33,9 +33,29 @@ export class RolesService {
     return role.save()
   }
 
+  async changeUserRole(dto: ChangeRoleDto): Promise<UserDocument> {
+    if (!isValidObjectId(dto.roleId)) {
+      throw new HttpException('Invalid role ID format', HttpStatus.BAD_REQUEST)
+    }
+
+    if (!isValidObjectId(dto.userId)) {
+      throw new HttpException('Invalid user ID format', HttpStatus.BAD_REQUEST)
+    }
+
+    const role = await this.roleModel.findById(dto.roleId)
+    const user = await this.userModel.findById(dto.userId)
+
+    if (!role) throw new HttpException('Role not found by this id', HttpStatus.BAD_REQUEST)
+    if (!user) throw new HttpException('User not found by this id', HttpStatus.BAD_REQUEST)
+
+    user.roles = [role._id]
+
+    return user.save()
+  }
+
   async updateRole(dto: UpdateRoleDto): Promise<RoleDocument> {
     if (!isValidObjectId(dto.id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid role ID format', HttpStatus.BAD_REQUEST)
     }
 
     const role = await this.roleModel.findById(dto.id).exec()
@@ -59,7 +79,7 @@ export class RolesService {
 
   async deleteRole(id: string): Promise<RoleDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid role ID format', HttpStatus.BAD_REQUEST)
     }
 
     const role = await this.roleModel.findById(id).exec()

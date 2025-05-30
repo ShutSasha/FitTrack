@@ -8,5 +8,6 @@ import { NutritionProduct, NutritionProductSchema } from './nutrition-product.sc
   imports: [MongooseModule.forFeature([{ name: NutritionProduct.name, schema: NutritionProductSchema }])],
   controllers: [NutritionProductsController],
   providers: [NutritionProductsService],
+  exports: [NutritionProductsService],
 })
 export class NutritionProductsModule {}

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import * as nodemailer from 'nodemailer'
+import { SendConfirmEmailDto } from '~types/email.types'
 
 @Injectable()
 export class EmailService {
@@ -17,14 +18,14 @@ export class EmailService {
     })
   }
 
-  async sendConfirmationEmail(email: string, token: string) {
+  async sendConfirmationEmail(dto: SendConfirmEmailDto) {
     const confirmationUrl = `${
       process.env.NODE_ENV === 'production' ? process.env.APP_URL : 'http://localhost:5000/api'
-    }/auth/confirm-email/${token}`
+    }/auth/confirm-email/${dto.token}`
 
     await this.transporter.sendMail({
       from: `"Your App" <${process.env.SMTP_USER}>`,
-      to: email,
+      to: dto.email,
       subject: 'Confirm Your Email',
       html: `
       <div style="background-color:#121212;padding:40px;color:#ffffff;font-family:Arial,sans-serif;border-radius:10px;max-width:500px;margin:auto;">

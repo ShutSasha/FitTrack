@@ -29,3 +29,15 @@ export class UpdateRoleDto {
   @IsString({ message: 'Should be a string' })
   readonly description: string
 }
+
+export class ChangeRoleDto {
+  @ApiProperty({ example: '12134512df2144', description: 'Id of role that u wanna update' })
+  @IsNotEmpty({ message: 'id field cannot be empty' })
+  @IsString({ message: 'Should be a string' })
+  readonly roleId: string
+
+  @ApiProperty({ example: '12134512df2144', description: 'Id of user that u wanna update' })
+  @IsNotEmpty({ message: 'id field cannot be empty' })
+  @IsString({ message: 'Should be a string' })
+  readonly userId: string
+}

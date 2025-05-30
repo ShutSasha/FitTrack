@@ -69,7 +69,7 @@ export class User {
   @Prop({ enum: ['sedentary', 'light', 'moderate', 'active', 'very active'], default: 'moderate' })
   activityLevel: string
 
-  @ApiProperty({ example: '1990-01-01', description: 'The birth date of the user' })
+  @ApiProperty({ example: '1990-01-19', description: 'The birth date of the user' })
   @Prop({ default: null })
   birthDate: Date
 

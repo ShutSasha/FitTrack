@@ -14,7 +14,7 @@ export class NutritionProductsService {
 
   async getNutritionProductById(id: string): Promise<NutritionProductDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid nutrition product ID format', HttpStatus.BAD_REQUEST)
     }
 
     const product = await this.nutritionProductModel.findById(id).exec()
@@ -76,7 +76,7 @@ export class NutritionProductsService {
 
   async update(id: string, dto: NutritionProductDto): Promise<NutritionProductDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid nutrition product ID format', HttpStatus.BAD_REQUEST)
     }
 
     const product = await this.nutritionProductModel.findById(id).exec()
@@ -94,7 +94,7 @@ export class NutritionProductsService {
 
   async delete(id: string): Promise<NutritionProductDocument> {
     if (!isValidObjectId(id)) {
-      throw new HttpException('Invalid ID format', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Invalid nutrition product ID format', HttpStatus.BAD_REQUEST)
     }
 
     const product = await this.nutritionProductModel.findById(id).exec()

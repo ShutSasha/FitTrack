@@ -9,6 +9,7 @@ import { CreateUserDto } from '~types/users.types'
 import { ConfirmResetPasswordCodeReq, PersonalizeDto, RegisterUserDto, TokensRes } from '~types/auth.types'
 import { EmailService } from 'modules/email/email.service'
 import { v4 as uuidv4 } from 'uuid'
+import { DailyLogsService } from 'modules/daily-logs/daily-logs.service'
 
 @Injectable()
 export class AuthService {
@@ -17,13 +18,24 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
+    private readonly dailyLogService: DailyLogsService,
   ) {}
 
   async login(dto: CreateUserDto): Promise<TokensRes> {
     const user = await this.validateUser(dto)
 
     if (!user.isEmailConfirmed) {
-      throw new HttpException('Please confirm your email first', HttpStatus.FORBIDDEN)
+      const confirmationToken = uuidv4()
+
+      user.emailConfirmationToken = confirmationToken
+      await user.save()
+
+      await this.emailService.sendConfirmationEmail({ email: dto.email, token: confirmationToken })
+
+      throw new HttpException(
+        'Please confirm your email first, the email confirm has been sent to your email',
+        HttpStatus.FORBIDDEN,
+      )
     }
 
     return this.generateTokens(user)
@@ -49,7 +61,7 @@ export class AuthService {
       emailConfirmationToken: confirmationToken,
     })
 
-    await this.emailService.sendConfirmationEmail(dto.email, confirmationToken)
+    await this.emailService.sendConfirmationEmail({ email: dto.email, token: confirmationToken })
 
     return this.generateTokens(user)
   }
@@ -74,7 +86,30 @@ export class AuthService {
 
     await candidate.save()
 
-    return candidate
+    const targets = this.dailyLogService.calculateTargets({
+      gender: dto.gender,
+      height: dto.height,
+      weight: dto.weight,
+      bodyType: dto.bodyType,
+      activityLevel: dto.activityLevel,
+      birthDate: new Date(dto.birthDate),
+      goalType: dto.goalType,
+      targetWeight: dto.targetWeight,
+    })
+
+    const dailyLog = await this.dailyLogService.getDailyLogByUserIdAndDate(
+      candidate._id.toString(),
+      new Date(dto.currentDate),
+    )
+
+    dailyLog.calories.target = targets.targetCalories
+    dailyLog.protein.target = targets.targetProtein
+    dailyLog.fat.target = targets.targetFat
+    dailyLog.carbs.target = targets.targetCarbs
+    dailyLog.water.target = targets.targetWater
+    dailyLog.save()
+
+    return candidate.save()
   }
 
   async confirmEmail(token: string): Promise<void> {
@@ -90,7 +125,7 @@ export class AuthService {
   }
 
   async resendConfirmationEmail(userId: string): Promise<void> {
-    const user = await this.userModel.findById(userId).exec()
+    const user = await this.usersService.getUserById(userId)
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND)
@@ -104,7 +139,7 @@ export class AuthService {
     user.emailConfirmationToken = confirmationToken
     await user.save()
 
-    await this.emailService.sendConfirmationEmail(user.email, confirmationToken)
+    await this.emailService.sendConfirmationEmail({ email: user.email, token: confirmationToken })
   }
 
   async sendResetPasswordCode(email: string): Promise<void> {
@@ -127,14 +162,10 @@ export class AuthService {
   }
 
   async confirmResetPasswordCode(dto: ConfirmResetPasswordCodeReq): Promise<void> {
-    if (!isValidObjectId(dto.userId)) {
-      throw new HttpException('Invalid user ID format', HttpStatus.BAD_REQUEST)
-    }
-
-    const user = await this.userModel.findOne({ _id: dto.userId }).exec()
+    const user = await this.userModel.findOne({ email: dto.email }).exec()
 
     if (!user) {
-      throw new HttpException('User not found with this id', HttpStatus.NOT_FOUND)
+      throw new HttpException('User not found with this email', HttpStatus.NOT_FOUND)
     }
 
     if (user.resetPasswordCode !== dto.code) {
@@ -176,7 +207,7 @@ export class AuthService {
   }
 
   private async validateUser(dto: CreateUserDto): Promise<UserDocument> {
-    const user = await this.usersService.getUserByUsername(dto.username)
+    const user = await this.usersService.getUserByUsernameAndEmail(dto.username, dto.email)
 
     if (!user) throw new HttpException('User with this username has been not found', HttpStatus.NOT_FOUND)
 

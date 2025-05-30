@@ -1,6 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { CreateUserDto } from './users.types'
-import { IsDateString, IsEnum, IsNotEmpty, IsNumber, IsString, Length, Max, Min, MinLength } from 'class-validator'
+import {
+  IsDateString,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Length,
+  Max,
+  Min,
+  MinLength,
+} from 'class-validator'
 
 export class RegisterUserDto extends CreateUserDto {
   @ApiProperty({
@@ -57,8 +68,11 @@ export class TokensRes {
 }
 
 export class ConfirmResetPasswordCodeReq {
-  @ApiProperty({ example: '12345667890qwertyuiop[', description: 'userId' })
-  readonly userId: string
+  @ApiProperty({ example: 'yaroslav@gmail.com', description: 'The user’s email' })
+  @IsString({ message: 'Email must be a string.' })
+  @IsNotEmpty({ message: 'Email cannot be empty.' })
+  @IsEmail()
+  readonly email: string
 
   @ApiProperty({ example: '1234', description: 'confirm code' })
   readonly code: number
@@ -105,6 +119,16 @@ export class ConfirmResetPasswordCodeResponseDto {
 export class PersonalizeDto {
   @ApiProperty({ example: '12345667890qwertyuiop[', description: 'userId' })
   readonly userId: string
+
+  @ApiProperty({
+    description: 'The current date yyyy-mm-dd format',
+    example: '1990.01.01',
+  })
+  @IsDateString(
+    { strict: true },
+    { message: 'Current date must be a valid date in yyyy-mm-dd format (e.g., 1990-01-29)' },
+  )
+  currentDate: string
 
   @ApiProperty({
     description: 'The gender of the user',

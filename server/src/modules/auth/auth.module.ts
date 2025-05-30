@@ -8,6 +8,7 @@ import { PassportModule } from '@nestjs/passport'
 import { JwtModule } from '@nestjs/jwt'
 import { JwtStrategy } from './jwt.strategy'
 import { EmailModule } from 'modules/email/email.module'
+import { DailyLogsModule } from 'modules/daily-logs/daily-logs.module'
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { EmailModule } from 'modules/email/email.module'
       signOptions: { expiresIn: '30d' },
     }),
     EmailModule,
+    forwardRef(() => DailyLogsModule),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
