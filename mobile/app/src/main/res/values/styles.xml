@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="FilledFieldStyle">
+        <item name="android:background">@drawable/shape_filled_button</item>
+        <item name="android:textColor">#030303</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="OutlinedFieldStyle">
+        <item name="android:background">@drawable/shape_outlined_button</item>
+        <item name="android:textColor">#030303</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="Title">
+        <item name="android:textColor">#030303</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="AuthLinkText">
+        <item name="android:textColor">#030303</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="AuthText">
+        <item name="android:textColor">#030303</item>
+        <item name="android:alpha">0.64</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="VerificationCodeInput">
+        <item name="android:background">@drawable/shape_verify_code_input</item>
+        <item name="android:textColor">#7FB98C</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="Text">
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="HomeTitle">
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/sf_pro_text_bold</item>
+    </style>
+
+    <style name="FilledDropdown">
+        <item name="android:background">@drawable/shape_filled_dropdown_item</item>
+        <item name="android:textColor">#030303</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="OutlinedDropdown">
+        <item name="android:background">@drawable/shape_outlined_dropdown_item</item>
+        <item name="android:textColor">#030303</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+
+    <style name="SearchField">
+        <item name="android:background">@drawable/shape_search_field</item>
+        <item name="android:textColor">#030303</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColorHint">#616161</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/sf_pro_text_regular</item>
+    </style>
+</resources>

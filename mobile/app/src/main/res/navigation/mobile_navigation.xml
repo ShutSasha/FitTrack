@@ -7,19 +7,36 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.mobile.ui.home.HomeFragment"
+        android:name="com.example.mobile.presentation.view.main.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.mobile.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_changeRole"
+        android:name="com.example.mobile.presentation.view.main.admin.ChangeRoleFragment"
+        android:label="@string/change_role" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.mobile.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_admin"
+        android:name="com.example.mobile.presentation.view.main.admin.AdminFragment"
+        android:label="Admin"
+        tools:layout="@layout/fragment_admin" />
+
+    <fragment
+        android:id="@+id/navigation_filter"
+        android:name="com.example.mobile.presentation.view.main.filter.FilterFragment"
+        android:label="Filter"
+        tools:layout="@layout/fragment_filter" />
+
+    <fragment
+        android:id="@+id/navigation_sort"
+        android:name="com.example.mobile.presentation.view.main.sort.SortFragment"
+        android:label="Sort"
+        tools:layout="@layout/fragment_sort" />
+
+    <fragment
+        android:id="@+id/navigation_foodRequest"
+        android:name="com.example.mobile.presentation.view.main.admin.FoodRequestFragment"
+        android:label="FoodRequest"
+        tools:layout="@layout/fragment_food_request" />
 </navigation>
