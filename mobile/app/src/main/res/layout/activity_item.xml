@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="51dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="10dp"
+    android:background="@drawable/shape_yellow_card"
+    android:layout_marginTop="12dp">
+
+    <TextView
+        android:id="@+id/optionName"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Option Name"
+        style="@style/Text" />
+
+    <TextView
+        android:id="@+id/optionCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100 Kcal"
+        style="@style/Text"
+        android:layout_marginEnd="23dp" />
+
+    <ImageView
+        android:id="@+id/editIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_edit"
+        android:clickable="true"
+        android:layout_marginEnd="23dp" />
+
+    <ImageView
+        android:id="@+id/deleteIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_delete"
+        android:clickable="true" />
+
+</LinearLayout>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditText
+        android:id="@+id/searchInput"
+        style="@style/SearchField"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="13dp"
+        android:hint="Search by the username"
+        android:paddingHorizontal="14dp" />
+
+    <LinearLayout
+        android:id="@+id/sortAndFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/sort"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_blue_card_20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="13dp"
+                android:src="@drawable/ic_sort" />
+
+            <TextView
+                style="@style/Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/filter"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_blue_card_20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="13dp"
+                android:src="@drawable/ic_filter" />
+
+            <TextView
+                style="@style/Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
