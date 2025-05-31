@@ -185,11 +185,13 @@ class ChangeRoleFragment : Fragment() {
             for ((index, user) in userRes.items.withIndex()) {
                 val userLayout = layoutInflater.inflate(R.layout.dropdown, binding.userListContainer, false) as LinearLayout
                 val header = userLayout.findViewById<View>(R.id.header)
+                val title = userLayout.findViewById<TextView>(R.id.headerTitle)
                 val arrow = userLayout.findViewById<ImageView>(R.id.arrow)
                 val optionsContainer = userLayout.findViewById<LinearLayout>(R.id.options)
-                val selectedTextView = userLayout.findViewById<TextView>(R.id.headerTitle)
+                val selectedRole = userLayout.findViewById<TextView>(R.id.userRole)
 
-                selectedTextView.text = user.username
+                title.text = user.username
+                selectedRole.text = if (user.roles.isNotEmpty()) user.roles[0].value else "No role"
 
                 header.background = requireContext().getDrawable(backgrounds[index % backgrounds.size])
 
@@ -200,9 +202,10 @@ class ChangeRoleFragment : Fragment() {
                     container = optionsContainer,
                     header = header,
                     arrow = arrow,
-                    selectedTextView = selectedTextView,
-                    options = roleOptions
-                ) { selectedRoleId ->
+                    selectedRole = selectedRole,
+                    options = roleOptions,
+                    onOptionSelected = { }
+                ) { selectedRoleId, selectedRoleName ->
                     changeUserRole(user._id, selectedRoleId)
                 }
 

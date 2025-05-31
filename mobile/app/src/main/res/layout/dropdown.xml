@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
+    android:id="@+id/mealView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/genderContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginTop="16dp"
+    android:layout_marginTop="18dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/title" >
+    app:layout_constraintTop_toBottomOf="@+id/title">
 
     <LinearLayout
         android:id="@+id/header"
@@ -22,15 +23,26 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+
         <TextView
             android:id="@+id/headerTitle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/select_gender"
-            android:textColor="#030303"
-            android:fontFamily="@font/sf_pro_text_regular"
-            android:textSize="16sp" />
+            style="@style/Text" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/userRole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0Kcal"
+            android:layout_marginEnd="23dp"
+            style="@style/Text" />
 
         <ImageView
             android:id="@+id/arrow"
