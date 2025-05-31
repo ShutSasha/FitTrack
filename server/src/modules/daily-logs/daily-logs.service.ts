@@ -62,16 +62,18 @@ export class DailyLogsService {
       targetWeight: user.targetWeight,
     })
 
-    dailyLog.calories.target = targets.targetCalories
-    dailyLog.protein.target = targets.targetProtein
-    dailyLog.fat.target = targets.targetFat
-    dailyLog.carbs.target = targets.targetCarbs
-    dailyLog.water.target = targets.targetWater
-    dailyLog.weight.current = user.weight
-    dailyLog.weight.target = user.targetWeight
-    dailyLog.save()
+    if (dailyLog) {
+      dailyLog.calories.target = targets.targetCalories
+      dailyLog.protein.target = targets.targetProtein
+      dailyLog.fat.target = targets.targetFat
+      dailyLog.carbs.target = targets.targetCarbs
+      dailyLog.water.target = targets.targetWater
+      dailyLog.weight.current = user.weight
+      dailyLog.weight.target = user.targetWeight
+      dailyLog.save()
 
-    if (dailyLog) return dailyLog
+      return dailyLog
+    }
 
     const weight = {
       current: user.weight,
