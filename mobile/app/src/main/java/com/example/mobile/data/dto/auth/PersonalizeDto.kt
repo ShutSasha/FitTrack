@@ -9,6 +9,7 @@ data class PersonalizeDto(
     val activityLevel: String,
     val birthDate: String,
     val goalType: String,
-    val targetWeight: Double
+    val targetWeight: Double,
+    val currentDate: String
 )
 

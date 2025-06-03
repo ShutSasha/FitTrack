@@ -16,6 +16,7 @@ import com.example.mobile.databinding.ActivityPersonalizationBinding
 import com.example.mobile.dto.auth.PersonalizeDto
 import com.example.mobile.dto.auth.PersonalizeResponse
 import com.example.mobile.presentation.view.splash.SplashActivity
+import com.example.mobile.presentation.view.util.DateUtils.getTodayDateString
 import com.example.mobile.presentation.view.util.PersonalizationDropdown
 import com.example.mobile.presentation.view.util.UserProfileOptions
 import es.dmoral.toasty.Toasty
@@ -104,7 +105,8 @@ class PersonalizationActivity : AppCompatActivity() {
             activityLevel = selectedActivityLevel,
             birthDate = _binding.birthDate.text.toString(),
             goalType = selectedGoalType,
-            targetWeight = _binding.targetWeight.text.toString().toDouble()
+            targetWeight = _binding.targetWeight.text.toString().toDouble(),
+            currentDate = getTodayDateString()
         )
         Log.d("Personalization", personalizeDto.toString())
         val authAPI = RetrofitClient.Companion.getInstance(this).authAPI
