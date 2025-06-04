@@ -1,4 +1,4 @@
-package com.example.mobile.presentation.profile
+package com.example.mobile.presentation.view.main.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
