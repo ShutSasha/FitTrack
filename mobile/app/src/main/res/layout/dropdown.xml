@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    android:id="@+id/mealView"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mealView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_marginTop="18dp"
+    android:orientation="vertical"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/title">
 
     <LinearLayout
         android:id="@+id/header"
-        android:paddingHorizontal="16dp"
-        android:background="@drawable/shape_yellow_card"
         android:layout_width="match_parent"
         android:layout_height="76dp"
+        android:background="@drawable/shape_yellow_card"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
 
 
         <TextView
             android:id="@+id/headerTitle"
+            style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/select_gender"
-            style="@style/Text" />
+            android:text="@string/select_gender" />
 
         <View
             android:layout_width="0dp"
@@ -38,11 +37,11 @@
 
         <TextView
             android:id="@+id/userRole"
+            style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0Kcal"
             android:layout_marginEnd="23dp"
-            style="@style/Text" />
+            android:text="0Kcal" />
 
         <ImageView
             android:id="@+id/arrow"
@@ -57,7 +56,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
-    </LinearLayout>
-
+        android:visibility="gone"></LinearLayout>
 </LinearLayout>

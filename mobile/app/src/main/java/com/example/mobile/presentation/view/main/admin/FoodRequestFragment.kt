@@ -21,7 +21,6 @@ import com.example.mobile.data.api.RetrofitClient
 import com.example.mobile.data.dto.productRequest.ProductRequestResponse
 import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.databinding.FragmentFoodRequestBinding
-import com.example.mobile.dto.role.ChangeRoleDto
 import com.example.mobile.presentation.view.util.ErrorUtils
 import es.dmoral.toasty.Toasty
 import okhttp3.ResponseBody
@@ -50,7 +49,7 @@ class FoodRequestFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFoodRequestBinding.inflate(inflater, container, false)
         encryptedPreferencesManager = EncryptedPreferencesManager(requireContext())
 
@@ -161,9 +160,9 @@ class FoodRequestFragment : Fragment() {
     }
 
     private fun setupScrollListener() {
-        val scrollView = binding?.main ?: return
+        val scrollView = binding.main
         val scrollListener = ViewTreeObserver.OnScrollChangedListener {
-            val b = binding ?: return@OnScrollChangedListener
+            val b = binding
             val sv = b.main
             val view = sv.getChildAt(0) ?: return@OnScrollChangedListener
 
@@ -191,7 +190,8 @@ class FoodRequestFragment : Fragment() {
         } else {
             R.drawable.shape_blue_card_20dp
         }
-        binding.searchField.sort.background = ContextCompat.getDrawable(requireContext(), backgroundRes)
+        binding.searchField.sort.background =
+            ContextCompat.getDrawable(requireContext(), backgroundRes)
     }
 
     private fun fetchProductRequests(query: String? = null, page: Int = 1, limit: Int = 10) {
@@ -222,7 +222,8 @@ class FoodRequestFragment : Fragment() {
                         if (page == 1) {
                             productRequestResponse = result
                         } else {
-                            val updatedItems = productRequestResponse?.items.orEmpty() + result.items
+                            val updatedItems =
+                                productRequestResponse?.items.orEmpty() + result.items
                             productRequestResponse = result.copy(items = updatedItems)
                         }
 
@@ -260,10 +261,12 @@ class FoodRequestFragment : Fragment() {
 
             val inflater = LayoutInflater.from(requireContext())
             for (product in products) {
-                val itemView = inflater.inflate(R.layout.request_item, binding.requestsContainer, false)
+                val itemView =
+                    inflater.inflate(R.layout.request_item, binding.requestsContainer, false)
 
                 itemView.findViewById<TextView>(R.id.textView).text = product.name
-                itemView.findViewById<TextView>(R.id.caloriesNumber).text = "${product.calories} kcal"
+                itemView.findViewById<TextView>(R.id.caloriesNumber).text =
+                    "${product.calories} kcal"
                 itemView.findViewById<TextView>(R.id.proteinNumber).text = "${product.protein} g"
                 itemView.findViewById<TextView>(R.id.fatNumber).text = "${product.fat} g"
                 itemView.findViewById<TextView>(R.id.carbsNumber).text = "${product.carbs} g"
@@ -286,20 +289,29 @@ class FoodRequestFragment : Fragment() {
         val accessToken = encryptedPreferencesManager?.getAccessToken()
         val productRequestApi = RetrofitClient.getInstance(requireContext()).productRequestApi
 
-        productRequestApi.approveRequest(accessToken, requestId).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (response.isSuccessful) {
-                    Toasty.success(requireContext(), "Request approved successfully!", Toast.LENGTH_SHORT, true).show()
-                    reloadRequests()
-                } else {
-                    showError(ErrorUtils.parseErrorMessage(response.errorBody()?.string()))
+        productRequestApi.approveRequest(accessToken, requestId)
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    if (response.isSuccessful) {
+                        Toasty.success(
+                            requireContext(),
+                            "Request approved successfully!",
+                            Toast.LENGTH_SHORT,
+                            true
+                        ).show()
+                        reloadRequests()
+                    } else {
+                        showError(ErrorUtils.parseErrorMessage(response.errorBody()?.string()))
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                showError("Network error: ${t.message}")
-            }
-        })
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    showError("Network error: ${t.message}")
+                }
+            })
     }
 
     private fun rejectRequest(requestId: String) {
@@ -307,20 +319,29 @@ class FoodRequestFragment : Fragment() {
         val accessToken = encryptedPreferencesManager?.getAccessToken()
         val productRequestApi = RetrofitClient.getInstance(requireContext()).productRequestApi
 
-        productRequestApi.rejectRequest(accessToken, requestId).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (response.isSuccessful) {
-                    Toasty.success(requireContext(), "Request rejected successfully!", Toast.LENGTH_SHORT, true).show()
-                    reloadRequests()
-                } else {
-                    showError(ErrorUtils.parseErrorMessage(response.errorBody()?.string()))
+        productRequestApi.rejectRequest(accessToken, requestId)
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    if (response.isSuccessful) {
+                        Toasty.success(
+                            requireContext(),
+                            "Request rejected successfully!",
+                            Toast.LENGTH_SHORT,
+                            true
+                        ).show()
+                        reloadRequests()
+                    } else {
+                        showError(ErrorUtils.parseErrorMessage(response.errorBody()?.string()))
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                showError("Network error: ${t.message}")
-            }
-        })
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    showError("Network error: ${t.message}")
+                }
+            })
     }
 
     private fun reloadRequests() {

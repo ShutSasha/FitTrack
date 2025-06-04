@@ -1,6 +1,6 @@
 package com.example.mobile.data.api
 
-import com.example.mobile.dto.role.ChangeRoleDto
+import com.example.mobile.data.dto.role.ChangeRoleDto
 import com.example.mobile.domain.model.Role
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -10,7 +10,6 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface RoleApi {
-
     @GET("roles")
     fun fetchroles(
         @Header("accessToken") accessToken: String?

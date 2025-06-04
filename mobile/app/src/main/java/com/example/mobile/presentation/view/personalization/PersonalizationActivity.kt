@@ -1,6 +1,5 @@
 package com.example.mobile.presentation.view.personalization
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,10 +10,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mobile.R
 import com.example.mobile.data.api.RetrofitClient
+import com.example.mobile.data.dto.auth.PersonalizeDto
+import com.example.mobile.data.dto.auth.PersonalizeResponse
 import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.databinding.ActivityPersonalizationBinding
-import com.example.mobile.dto.auth.PersonalizeDto
-import com.example.mobile.dto.auth.PersonalizeResponse
 import com.example.mobile.presentation.view.splash.SplashActivity
 import com.example.mobile.presentation.view.util.DateUtils.getTodayDateString
 import com.example.mobile.presentation.view.util.PersonalizationDropdown
@@ -30,10 +29,10 @@ class PersonalizationActivity : AppCompatActivity() {
     private lateinit var _binding: ActivityPersonalizationBinding
     private var encryptedPreferencesManager: EncryptedPreferencesManager? = null
     private lateinit var personalizationDropdown: PersonalizationDropdown
-    private lateinit var selectedGender : String
-    private lateinit var selectedBodyType : String
-    private lateinit var selectedActivityLevel : String
-    private lateinit var selectedGoalType : String
+    private lateinit var selectedGender: String
+    private lateinit var selectedBodyType: String
+    private lateinit var selectedActivityLevel: String
+    private lateinit var selectedGoalType: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,7 +111,10 @@ class PersonalizationActivity : AppCompatActivity() {
         val authAPI = RetrofitClient.Companion.getInstance(this).authAPI
 
         authAPI.personalize(personalizeDto).enqueue(object : Callback<PersonalizeResponse> {
-            override fun onResponse(call: Call<PersonalizeResponse>, response: Response<PersonalizeResponse>) {
+            override fun onResponse(
+                call: Call<PersonalizeResponse>,
+                response: Response<PersonalizeResponse>
+            ) {
                 if (response.isSuccessful) {
                     response.body()?.let {
                         Toasty.success(

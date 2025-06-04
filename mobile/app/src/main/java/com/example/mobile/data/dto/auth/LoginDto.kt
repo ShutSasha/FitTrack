@@ -1,4 +1,4 @@
-package com.example.mobile.dto.auth
+package com.example.mobile.data.dto.auth
 
 data class LoginDto(
     val email: String,

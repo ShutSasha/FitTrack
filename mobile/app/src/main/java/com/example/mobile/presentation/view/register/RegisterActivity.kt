@@ -17,13 +17,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mobile.R
 import com.example.mobile.data.api.RetrofitClient
+import com.example.mobile.data.dto.auth.RefreshRes
+import com.example.mobile.data.dto.auth.RegisterDto
 import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.databinding.ActivityRegisterBinding
-import com.example.mobile.dto.auth.RefreshRes
-import com.example.mobile.dto.auth.RegisterDto
-import com.example.mobile.presentation.view.util.ErrorUtils
 import com.example.mobile.presentation.view.login.LoginActivity
 import com.example.mobile.presentation.view.personalization.PersonalizationActivity
+import com.example.mobile.presentation.view.util.ErrorUtils
 import es.dmoral.toasty.Toasty
 import retrofit2.Call
 import retrofit2.Callback
@@ -82,7 +82,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun register(){
+    private fun register() {
 
         val registerDto = RegisterDto(
             email = _binding.email.text.toString(),

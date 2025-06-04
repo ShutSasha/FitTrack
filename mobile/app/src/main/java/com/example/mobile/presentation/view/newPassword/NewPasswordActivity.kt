@@ -10,9 +10,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mobile.R
 import com.example.mobile.data.api.RetrofitClient
+import com.example.mobile.data.dto.auth.ResetPasswordDto
 import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.databinding.ActivityNewPasswordBinding
-import com.example.mobile.dto.auth.ResetPasswordDto
 import com.example.mobile.presentation.view.login.LoginActivity
 import es.dmoral.toasty.Toasty
 import okhttp3.ResponseBody
@@ -45,7 +45,7 @@ class NewPasswordActivity : AppCompatActivity() {
         }
     }
 
-    private fun resetPassword(){
+    private fun resetPassword() {
         val email = intent.getStringExtra("email")
         val code = intent.getStringExtra("code")
 
@@ -60,7 +60,10 @@ class NewPasswordActivity : AppCompatActivity() {
             val authAPI = RetrofitClient.Companion.getInstance(this).authAPI
 
             authAPI.confirmResetPassword(resetPasswordDto).enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
                     if (response.isSuccessful) {
                         response.body()?.let {
 

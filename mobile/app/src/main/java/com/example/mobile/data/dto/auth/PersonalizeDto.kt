@@ -1,4 +1,4 @@
-package com.example.mobile.dto.auth
+package com.example.mobile.data.dto.auth
 
 data class PersonalizeDto(
     val userId: String,
@@ -12,4 +12,3 @@ data class PersonalizeDto(
     val targetWeight: Double,
     val currentDate: String
 )
-

@@ -6,8 +6,9 @@ import retrofit2.http.DELETE
 import retrofit2.http.Path
 
 interface MealApi {
-
     @DELETE("meals/{mealId}/{nutritionEntryId}")
-    fun deleteNutritionFromMeal(@Path("mealId") mealId: String?, @Path("nutritionEntryId") nutritionEntryId: String?): Call<ResponseBody>
-
+    fun deleteNutritionFromMeal(
+        @Path("mealId") mealId: String?,
+        @Path("nutritionEntryId") nutritionEntryId: String?
+    ): Call<ResponseBody>
 }

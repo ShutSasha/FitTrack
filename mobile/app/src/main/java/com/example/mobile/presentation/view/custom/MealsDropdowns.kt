@@ -6,9 +6,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.mobile.R
+import com.example.mobile.data.dto.dailyLog.UserDailyLogRes
 import com.example.mobile.domain.model.Meal
-import com.example.mobile.dto.dailyLog.UserDailyLogRes
-import kotlin.collections.iterator
 
 class MealsDropdowns {
 
@@ -43,7 +42,12 @@ class MealsDropdowns {
                     arrow = arrow,
                     options = options,
                     onEditClicked = onEditClicked,
-                    onDeleteClicked = { nutritionEntryId -> onDeleteClicked(meal, nutritionEntryId) }
+                    onDeleteClicked = { nutritionEntryId ->
+                        onDeleteClicked(
+                            meal,
+                            nutritionEntryId
+                        )
+                    }
                 )
             } else {
                 container.visibility = View.GONE

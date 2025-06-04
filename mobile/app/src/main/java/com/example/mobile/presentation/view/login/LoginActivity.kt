@@ -15,15 +15,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.mobile.presentation.view.forgotPassword.ForgotPasswordActivity
-import com.example.mobile.presentation.view.main.MainActivity
 import com.example.mobile.R
-import com.example.mobile.presentation.view.register.RegisterActivity
 import com.example.mobile.data.api.RetrofitClient
+import com.example.mobile.data.dto.auth.LoginDto
+import com.example.mobile.data.dto.auth.RefreshRes
 import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.databinding.ActivityLoginBinding
-import com.example.mobile.dto.auth.LoginDto
-import com.example.mobile.dto.auth.RefreshRes
+import com.example.mobile.presentation.view.forgotPassword.ForgotPasswordActivity
+import com.example.mobile.presentation.view.main.MainActivity
+import com.example.mobile.presentation.view.register.RegisterActivity
 import es.dmoral.toasty.Toasty
 import org.json.JSONObject
 import retrofit2.Call
@@ -144,5 +144,4 @@ class LoginActivity : AppCompatActivity() {
             }
         })
     }
-
 }

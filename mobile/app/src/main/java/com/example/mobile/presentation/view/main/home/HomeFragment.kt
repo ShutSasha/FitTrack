@@ -12,10 +12,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.mobile.R
 import com.example.mobile.data.api.RetrofitClient
+import com.example.mobile.data.dto.dailyLog.UserDailyLogRes
+import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.databinding.ActivityItemBinding
 import com.example.mobile.databinding.FragmentHomeBinding
-import com.example.mobile.dto.dailyLog.UserDailyLogRes
-import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.presentation.view.custom.MealsDropdowns
 import com.example.mobile.presentation.view.util.DateUtils
 import com.example.mobile.presentation.view.util.DateUtils.formatIsoDateToReadable
@@ -64,34 +64,57 @@ class HomeFragment : Fragment() {
 
             binding.date.text = formatIsoDateToReadable(logRes.date)
 
-            binding.calorieProgress.setCalories(logRes.totalCalories.toInt(), logRes.calories.target.toInt(), unit = "Kcal")
-            binding.proteinProgress.setNutrition(logRes.protein.current.toInt(), logRes.protein.target.toInt(), label = "Proteins", unit = "g")
-            binding.fatProgress.setNutrition(logRes.fat.current.toInt(), logRes.fat.target.toInt(), label = "Fats", unit = "g")
-            binding.carbProgress.setNutrition(logRes.carbs.current.toInt(), logRes.carbs.target.toInt(), label = "Carbohydrates", unit = "g")
+            binding.calorieProgress.setCalories(
+                logRes.totalCalories.toInt(),
+                logRes.calories.target.toInt(),
+                unit = "Kcal"
+            )
+            binding.proteinProgress.setNutrition(
+                logRes.protein.current.toInt(),
+                logRes.protein.target.toInt(),
+                label = "Proteins",
+                unit = "g"
+            )
+            binding.fatProgress.setNutrition(
+                logRes.fat.current.toInt(),
+                logRes.fat.target.toInt(),
+                label = "Fats",
+                unit = "g"
+            )
+            binding.carbProgress.setNutrition(
+                logRes.carbs.current.toInt(),
+                logRes.carbs.target.toInt(),
+                label = "Carbohydrates",
+                unit = "g"
+            )
 
             binding.firstCard.cardIcon.setImageResource(R.drawable.ic_apple)
             binding.firstCard.cardMainText.text = "${logRes.calories.current.toInt()} Kcal"
             binding.firstCard.cardSubText.text = "${logRes.calories.target.toInt()} Kcal"
             binding.firstCard.cardTitle.text = "Consumed calories"
-            binding.firstCard.cardWrapper.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_yellow_card)
+            binding.firstCard.cardWrapper.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.shape_yellow_card)
 
             binding.secondCard.cardIcon.setImageResource(R.drawable.ic_fire)
             binding.secondCard.cardMainText.text = "${logRes.burnedCalories.toInt()} Kcal"
             binding.secondCard.cardSubText.text = ""
             binding.secondCard.cardTitle.text = "Burned calories"
-            binding.secondCard.cardWrapper.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_green_card)
+            binding.secondCard.cardWrapper.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.shape_green_card)
 
             binding.thirdCard.cardIcon.setImageResource(R.drawable.ic_water)
             binding.thirdCard.cardMainText.text = "${logRes.water.current.toInt()} L"
             binding.thirdCard.cardSubText.text = "${logRes.water.target.toInt()} L"
             binding.thirdCard.cardTitle.text = "Drank water"
-            binding.thirdCard.cardWrapper.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_blue_card)
+            binding.thirdCard.cardWrapper.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.shape_blue_card)
 
             binding.fourthCard.cardIcon.setImageResource(R.drawable.ic_weight)
             binding.fourthCard.cardMainText.text = "${logRes.weight.current.toInt()} Kg"
             binding.fourthCard.cardSubText.text = "${logRes.weight.target.toInt()} Kg"
             binding.fourthCard.cardTitle.text = "Weight goal"
-            binding.fourthCard.cardWrapper.background = ContextCompat.getDrawable(requireContext(), R.drawable.shape_pink_card)
+            binding.fourthCard.cardWrapper.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.shape_pink_card)
 
             val dropdownMap = mapOf(
                 "Breakfast" to requireView().findViewById<View>(R.id.breakfast),
@@ -121,14 +144,11 @@ class HomeFragment : Fragment() {
 
             binding.activitiesContainer.removeAllViews()
 
-            if (logRes.activities.isEmpty()) {
-                binding.activityTitle.isVisible = false
-            } else {
-                binding.activityTitle.isVisible = true
-            }
+            binding.activityTitle.isVisible = logRes.activities.isNotEmpty()
 
             logRes.activities.forEach { activity ->
-                val itemBinding = ActivityItemBinding.inflate(layoutInflater, binding.activitiesContainer, false)
+                val itemBinding =
+                    ActivityItemBinding.inflate(layoutInflater, binding.activitiesContainer, false)
 
                 itemBinding.optionName.text = activity.activityName
                 itemBinding.optionCalories.text = "${activity.burnedCalories.toInt()} Kcal"
@@ -195,7 +215,7 @@ class HomeFragment : Fragment() {
                     ).show()
                     Log.e("DailyLog", "Failed: ${t.message}", t)
                 }
-        })
+            })
     }
 
     private fun deleteNutritionFromMeal(mealId: String, nutritionEntryId: String) {
@@ -215,7 +235,7 @@ class HomeFragment : Fragment() {
                             Toast.LENGTH_SHORT,
                             true
                         ).show()
-                            Log.d("Meal", response.toString())
+                        Log.d("Meal", response.toString())
                         dailylog(selectedDate)
                     } else {
                         val errorMessage =
