@@ -39,4 +39,12 @@
         android:name="com.example.mobile.presentation.view.main.admin.FoodRequestFragment"
         android:label="FoodRequest"
         tools:layout="@layout/fragment_food_request" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.mobile.presentation.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
+
 </navigation>

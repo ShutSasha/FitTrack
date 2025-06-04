@@ -1,7 +1,6 @@
 package com.example.mobile.presentation.view.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
@@ -28,12 +27,31 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
 
         navItems = listOf(
-            Triple(findViewById(R.id.nav_home), findViewById(R.id.nav_home_bg), findViewById(R.id.nav_home_icon)),
-            Triple(findViewById(R.id.nav_food), findViewById(R.id.nav_food_bg), findViewById(R.id.nav_food_icon)),
-            Triple(findViewById(R.id.nav_activity), findViewById(R.id.nav_activity_bg), findViewById(
-                R.id.nav_activity_icon)),
-            Triple(findViewById(R.id.nav_profile), findViewById(R.id.nav_profile_bg), findViewById(R.id.nav_profile_icon)),
-            Triple(findViewById(R.id.nav_admin), findViewById(R.id.nav_admin_bg), findViewById(R.id.nav_admin_icon))
+            Triple(
+                findViewById(R.id.nav_home),
+                findViewById(R.id.nav_home_bg),
+                findViewById(R.id.nav_home_icon)
+            ),
+            Triple(
+                findViewById(R.id.nav_food),
+                findViewById(R.id.nav_food_bg),
+                findViewById(R.id.nav_food_icon)
+            ),
+            Triple(
+                findViewById(R.id.nav_activity), findViewById(R.id.nav_activity_bg), findViewById(
+                    R.id.nav_activity_icon
+                )
+            ),
+            Triple(
+                findViewById(R.id.nav_profile),
+                findViewById(R.id.nav_profile_bg),
+                findViewById(R.id.nav_profile_icon)
+            ),
+            Triple(
+                findViewById(R.id.nav_admin),
+                findViewById(R.id.nav_admin_bg),
+                findViewById(R.id.nav_admin_icon)
+            )
         )
 
         val role = encryptedPreferencesManager?.getRoleFromAccessToken()
@@ -57,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             updateSelection(2)
         }
         navItems[3].first.setOnClickListener {
-            navController.navigate(R.id.navigation_home)
+            navController.navigate(R.id.navigation_profile)
             updateSelection(3)
         }
         navItems[4].first.setOnClickListener {
@@ -90,6 +108,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
 }
