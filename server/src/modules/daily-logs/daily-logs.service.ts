@@ -70,7 +70,7 @@ export class DailyLogsService {
       dailyLog.water.target = targets.targetWater
       dailyLog.weight.current = user.weight
       dailyLog.weight.target = user.targetWeight
-      dailyLog.save()
+      await dailyLog.save()
 
       return dailyLog
     }
@@ -91,15 +91,15 @@ export class DailyLogsService {
       weight,
     })
 
-    return newDailyLog.save()
+    await newDailyLog.save()
+
+    return newDailyLog
   }
 
   public calculateTargets(user: CalculateTargetsDto): CalculateTargetsRes {
     const age = new Date().getFullYear() - new Date(user.birthDate).getFullYear()
 
-    const genderModifier = user.gender === 'male' ? 5 : user.gender === 'female' ? -161 : -78 // -78 avarage for other gender
-
-    // ** BMR - Basal Metabolic Rate or Розрахунок базового метаболізму за Mifflin-St Jeor
+    const genderModifier = user.gender === 'male' ? 5 : user.gender === 'female' ? -161 : -78
 
     const bmr = 10 * user.weight + 6.25 * user.height - 5 * age + genderModifier
 
@@ -123,7 +123,6 @@ export class DailyLogsService {
     const fatCals = fat * 9
     const remainingCals = totalCalories - proteinCals - fatCals
     const carbs = remainingCals / 4
-
     const water = user.weight * 35
 
     return {
