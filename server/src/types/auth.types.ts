@@ -122,7 +122,7 @@ export class PersonalizeDto {
 
   @ApiProperty({
     description: 'The current date yyyy-mm-dd format',
-    example: '1990.01.01',
+    example: '1990-01-01',
   })
   @IsDateString(
     { strict: true },
@@ -178,7 +178,7 @@ export class PersonalizeDto {
 
   @ApiProperty({
     description: 'The birth date of the user in yyyy-mm-dd format',
-    example: '1990.01.01',
+    example: '1990-01-01',
   })
   @IsDateString(
     { strict: true },
