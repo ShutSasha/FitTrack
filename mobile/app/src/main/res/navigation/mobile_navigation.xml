@@ -46,5 +46,35 @@
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
 
+    <fragment
+        android:id="@+id/navigation_edit_profile"
+        android:name="com.example.mobile.presentation.view.main.profile.EditProfileFragment"
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_edit_profile" />
+
+    <fragment
+        android:id="@+id/navigation_food"
+        android:name="com.example.mobile.presentation.view.main.food.FoodFragment"
+        android:label="FoodFragment"
+        tools:layout="@layout/fragment_food" />
+
+    <fragment
+        android:id="@+id/navigation_searchFood"
+        android:name="com.example.mobile.presentation.view.main.food.SearchFoodFragment"
+        android:label="SearchFoodFragment"
+        tools:layout="@layout/fragment_search_food" />
+
+    <fragment
+        android:id="@+id/navigation_addNewFood"
+        android:name="com.example.mobile.presentation.view.main.food.AddNewFoodFragment"
+        android:label="AddNewFoodFragment"
+        tools:layout="@layout/fragment_add_new_food" />
+
+    <fragment
+        android:id="@+id/navigation_addFoodToMeal"
+        android:name="com.example.mobile.presentation.view.main.food.AddFoodToMealFragment"
+        android:label="AddFoodToMealFragment"
+        tools:layout="@layout/fragment_add_food_to_meal" />
+
 
 </navigation>

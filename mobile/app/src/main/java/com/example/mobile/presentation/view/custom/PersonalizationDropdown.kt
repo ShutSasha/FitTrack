@@ -11,7 +11,7 @@ import com.example.mobile.R
 
 class PersonalizationDropdown(private val context: Context) {
 
-    private var isDropdownVisible = false
+    private val dropdownStates = mutableMapOf<LinearLayout, Boolean>()
 
     fun setUpDropdown(
         container: LinearLayout,
@@ -19,23 +19,29 @@ class PersonalizationDropdown(private val context: Context) {
         arrow: ImageView,
         selectedTextView: TextView,
         options: List<Pair<String, String>>,
-        onOptionSelected: (String) -> Unit
+        onOptionSelected: (String) -> Unit,
+        optionBackgroundRes: Int = R.drawable.shape_outlined_button
     ) {
-        header.setOnClickListener {
-            toggleDropdown(container, arrow)
-        }
+        dropdownStates[container] = false
 
-        arrow.setOnClickListener {
-            toggleDropdown(container, arrow)
-        }
+        header.setOnClickListener { toggleDropdown(container, arrow) }
+        arrow.setOnClickListener { toggleDropdown(container, arrow) }
 
-        populateDropdownOptions(container, selectedTextView, arrow, options, onOptionSelected)
+        populateDropdownOptions(
+            container,
+            selectedTextView,
+            arrow,
+            options,
+            onOptionSelected,
+            optionBackgroundRes
+        )
     }
 
     private fun toggleDropdown(container: LinearLayout, arrow: ImageView) {
-        container.visibility = if (isDropdownVisible) View.GONE else View.VISIBLE
-        arrow.rotation = if (isDropdownVisible) 0f else 270f
-        isDropdownVisible = !isDropdownVisible
+        val isVisible = dropdownStates[container] ?: false
+        container.visibility = if (isVisible) View.GONE else View.VISIBLE
+        arrow.rotation = if (isVisible) 0f else 270f
+        dropdownStates[container] = !isVisible
     }
 
     private fun populateDropdownOptions(
@@ -43,7 +49,8 @@ class PersonalizationDropdown(private val context: Context) {
         selectedTextView: TextView,
         arrow: ImageView,
         options: List<Pair<String, String>>,
-        onOptionSelected: (String) -> Unit
+        onOptionSelected: (String) -> Unit,
+        optionBackgroundRes: Int
     ) {
         container.removeAllViews()
         for ((label, key) in options) {
@@ -52,7 +59,7 @@ class PersonalizationDropdown(private val context: Context) {
                 textSize = 16f
                 setTextColor(Color.BLACK)
                 setPadding(24, 0, 24, 0)
-                setBackgroundResource(R.drawable.shape_outlined_button)
+                setBackgroundResource(optionBackgroundRes)
                 gravity = Gravity.CENTER_VERTICAL
                 isClickable = true
                 isFocusable = true
@@ -68,7 +75,7 @@ class PersonalizationDropdown(private val context: Context) {
                     selectedTextView.text = label
                     container.visibility = View.GONE
                     arrow.rotation = 0f
-                    isDropdownVisible = false
+                    dropdownStates[container] = false
                     onOptionSelected(key)
                 }
             }

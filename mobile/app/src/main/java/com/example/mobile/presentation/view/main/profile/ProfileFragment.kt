@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.example.mobile.R
 import com.example.mobile.data.api.RetrofitClient
@@ -37,6 +38,12 @@ class ProfileFragment : Fragment() {
 
         retrofitClient = RetrofitClient.getInstance(requireContext())
         encryptedPrefs = EncryptedPreferencesManager(requireContext())
+
+
+        binding.personalizeButton.setOnClickListener {
+            val action = Navigation.findNavController(requireView())
+            action.navigate(R.id.navigation_edit_profile)
+        }
 
         loadUserProfile()
     }
@@ -70,7 +77,6 @@ class ProfileFragment : Fragment() {
     private fun formatGoalType(rawValue: String): String {
         return UserProfileOptions.goalTypes.firstOrNull { it.second == rawValue }?.first ?: rawValue
     }
-
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

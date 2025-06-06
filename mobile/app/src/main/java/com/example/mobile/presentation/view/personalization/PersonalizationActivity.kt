@@ -54,38 +54,41 @@ class PersonalizationActivity : AppCompatActivity() {
             header = _binding.headerGender,
             arrow = _binding.genderArrow,
             selectedTextView = _binding.selectedGender,
-            options = UserProfileOptions.genders
-        ) { selectedKey -> selectedGender = selectedKey }
+            options = UserProfileOptions.genders,
+            onOptionSelected = { selectedKey -> selectedGender = selectedKey },
+            optionBackgroundRes = R.drawable.shape_outlined_button
+        )
 
         personalizationDropdown.setUpDropdown(
             container = _binding.bodyTypeOptions,
             header = _binding.headerBodyType,
             arrow = _binding.bodyTypeArrow,
             selectedTextView = _binding.selectedBodyType,
-            options = UserProfileOptions.bodyTypes
-        ) { selectedKey ->
-            selectedBodyType = selectedKey
-        }
+            options = UserProfileOptions.bodyTypes,
+            onOptionSelected = { selectedKey -> selectedBodyType = selectedKey },
+            optionBackgroundRes = R.drawable.shape_outlined_button
+        )
 
         personalizationDropdown.setUpDropdown(
             container = _binding.activityLevelOptions,
             header = _binding.headerActivityLevel,
             arrow = _binding.activityLevelArrow,
             selectedTextView = _binding.selectedActivityLevel,
-            options = UserProfileOptions.activityLevels
-        ) { selectedKey ->
-            selectedActivityLevel = selectedKey
-        }
+            options = UserProfileOptions.activityLevels,
+            onOptionSelected = { selectedKey -> selectedActivityLevel = selectedKey },
+            optionBackgroundRes = R.drawable.shape_outlined_button
+        )
 
         personalizationDropdown.setUpDropdown(
             container = _binding.goalTypeOptions,
             header = _binding.headerGoalType,
             arrow = _binding.goalTypeArrow,
             selectedTextView = _binding.selectedGoalType,
-            options = UserProfileOptions.goalTypes
-        ) { selectedKey ->
-            selectedGoalType = selectedKey
-        }
+            options = UserProfileOptions.goalTypes,
+            onOptionSelected = { selectedKey -> selectedGoalType = selectedKey },
+            optionBackgroundRes = R.drawable.shape_outlined_button
+        )
+
 
         _binding.personalizeButton.setOnClickListener {
             personalize()

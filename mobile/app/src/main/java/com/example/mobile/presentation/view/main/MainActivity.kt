@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             updateSelection(0)
         }
         navItems[1].first.setOnClickListener {
-            navController.navigate(R.id.navigation_admin)
+            navController.navigate(R.id.navigation_food)
             updateSelection(1)
         }
         navItems[2].first.setOnClickListener {
