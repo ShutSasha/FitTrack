@@ -18,6 +18,14 @@ class MealsDropdowns {
         onEditClicked: (String) -> Unit,
         onDeleteClicked: (Meal, String) -> Unit
     ) {
+        for ((_, mealView) in dropdownMap) {
+            val container = mealView.findViewById<LinearLayout>(R.id.options)
+            container.removeAllViews()
+            container.visibility = View.GONE
+            val arrow = mealView.findViewById<ImageView>(R.id.arrow)
+            arrow.rotation = 0f
+        }
+
         for ((mealType, mealView) in dropdownMap) {
             val container = mealView.findViewById<LinearLayout>(R.id.options)
             val header = mealView.findViewById<View>(R.id.header)
@@ -34,7 +42,7 @@ class MealsDropdowns {
                     Triple(it.productName, it.productCalories.toInt(), it._id)
                 }
                 val caloriesInt = meal.totalCalories.toInt()
-                totalCalories.text = "${caloriesInt} Kcal"
+                totalCalories.text = "$caloriesInt Kcal"
 
                 setUpDropdown(
                     container = container,
@@ -43,10 +51,7 @@ class MealsDropdowns {
                     options = options,
                     onEditClicked = onEditClicked,
                     onDeleteClicked = { nutritionEntryId ->
-                        onDeleteClicked(
-                            meal,
-                            nutritionEntryId
-                        )
+                        onDeleteClicked(meal, nutritionEntryId)
                     }
                 )
             } else {

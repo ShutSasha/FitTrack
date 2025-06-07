@@ -1,11 +1,13 @@
 package com.example.mobile.data.api
 
 import com.example.mobile.data.dto.meal.AddMealRequest
+import com.example.mobile.data.dto.meal.EditMealRequest
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface MealApi {
@@ -17,4 +19,7 @@ interface MealApi {
 
     @POST("meals")
     fun addMeal(@Body request: AddMealRequest): Call<ResponseBody>
+
+    @PUT("meals")
+    fun editNutritionInMeal(@Body request: EditMealRequest): Call<ResponseBody>
 }

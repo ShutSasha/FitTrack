@@ -27,4 +27,7 @@ interface NutritionProductApi {
         @Query("sortOrder") sortOrder: String?,
         @Query("productType") productType: String?,
     ): Call<ProductSearchResponse>
+
+    @GET("nutrition-products/{id}")
+    fun getProductById(@Path("id") id: String): Call<Product>
 }

@@ -206,6 +206,11 @@ class SearchFoodFragment : Fragment() {
                 val bundle = Bundle().apply {
                     putString("productId", product._id)
                     putString("productName", product.name)
+                    putString("calories", product.calories.toString())
+                    putString("protein", product.protein.toString())
+                    putString("fat", product.fat.toString())
+                    putString("carbs", product.carbs.toString())
+                    putString("productType", product.productType)
                 }
                 findNavController().navigate(R.id.navigation_addFoodToMeal, bundle)
             }

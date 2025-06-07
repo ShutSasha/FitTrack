@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.mobile.R
 import com.example.mobile.data.api.RetrofitClient
 import com.example.mobile.data.dto.dailyLog.UserDailyLogRes
@@ -103,8 +104,8 @@ class HomeFragment : Fragment() {
                 ContextCompat.getDrawable(requireContext(), R.drawable.shape_green_card)
 
             binding.thirdCard.cardIcon.setImageResource(R.drawable.ic_water)
-            binding.thirdCard.cardMainText.text = "${logRes.water.current.toInt()} L"
-            binding.thirdCard.cardSubText.text = "${logRes.water.target.toInt()} L"
+            binding.thirdCard.cardMainText.text = "${logRes.water.current.toInt()} ml"
+            binding.thirdCard.cardSubText.text = "${logRes.water.target.toInt()} ml"
             binding.thirdCard.cardTitle.text = "Drank water"
             binding.thirdCard.cardWrapper.background =
                 ContextCompat.getDrawable(requireContext(), R.drawable.shape_blue_card)
@@ -131,7 +132,30 @@ class HomeFragment : Fragment() {
                     dailyLog = data,
                     dropdownMap = dropdownMap,
                     inflater = layoutInflater,
-                    onEditClicked = { id -> /* редактировать */ },
+                    onEditClicked = { nutritionProductId ->
+                        val meal = logRes.meals.firstOrNull { meal ->
+                            meal.nutritionProducts.any { it._id == nutritionProductId }
+                        }
+                        val product =
+                            meal?.nutritionProducts?.firstOrNull { it._id == nutritionProductId }
+
+                        if (meal != null && product != null) {
+                            val bundle = Bundle().apply {
+                                putString("mealId", meal._id)
+                                putString("userId", logRes.userId)
+                                putString("date", logRes.date)
+                                putString("type", meal.type)
+                                putString("nutritionProductId", product.nutritionProductId)
+                                putString("entryId", product._id)
+                                putDouble("amount", product.amount)
+                                putString("productName", product.productName)
+                                val caloriesPer100g =
+                                    product.productCalories / (product.amount / 100.0)
+                                putDouble("calories", caloriesPer100g)
+                            }
+                            findNavController().navigate(R.id.navigation_addFoodToMeal, bundle)
+                        }
+                    },
                     onDeleteClicked = { meal, nutritionEntryId ->
                         deleteNutritionFromMeal(meal._id, nutritionEntryId)
                     }
