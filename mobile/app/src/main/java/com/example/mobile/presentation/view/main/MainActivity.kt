@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             updateSelection(1)
         }
         navItems[2].first.setOnClickListener {
-            navController.navigate(R.id.navigation_admin)
+            navController.navigate(R.id.navigation_searchSport)
             updateSelection(2)
         }
         navItems[3].first.setOnClickListener {

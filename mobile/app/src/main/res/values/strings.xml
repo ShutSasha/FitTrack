@@ -76,4 +76,6 @@
     <string name="birth_date">Birth Date</string>
     <string name="body_type">Body Type</string>
     <string name="gender">Gender</string>
+    <string name="sport">Sport</string>
+    <string name="calories_per_minute">Calories burned per minute</string>
 </resources>

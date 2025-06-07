@@ -13,10 +13,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.mobile.R
 import com.example.mobile.data.api.RetrofitClient
+import com.example.mobile.data.dto.activity.RemoveActivityRequest
 import com.example.mobile.data.dto.dailyLog.UserDailyLogRes
 import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.databinding.ActivityItemBinding
 import com.example.mobile.databinding.FragmentHomeBinding
+import com.example.mobile.domain.model.LoggedActivity
 import com.example.mobile.presentation.view.custom.MealsDropdowns
 import com.example.mobile.presentation.view.util.DateUtils
 import com.example.mobile.presentation.view.util.DateUtils.formatIsoDateToReadable
@@ -178,10 +180,19 @@ class HomeFragment : Fragment() {
                 itemBinding.optionCalories.text = "${activity.burnedCalories.toInt()} Kcal"
 
                 itemBinding.editIcon.setOnClickListener {
-                    // логика редактирования активности
+                    val bundle = Bundle().apply {
+                        putString("activityId", activity.activity)
+                        putString("activityName", activity.activityName)
+                        putDouble("caloriesPerMin", activity.burnedCalories / activity.totalMinutes)
+                        putString("existingDate", logRes.date)
+                        putInt("totalMinutes", activity.totalMinutes)
+                        putBoolean("isEditMode", true)
+                    }
+                    findNavController().navigate(R.id.navigation_addSport, bundle)
                 }
+
                 itemBinding.deleteIcon.setOnClickListener {
-                    // логика удаления активности
+                    deleteActivity(activity)
                 }
 
                 binding.activitiesContainer.addView(itemBinding.root)
@@ -285,5 +296,44 @@ class HomeFragment : Fragment() {
                     Log.e("Meal", "Failed: ${t.message}", t)
                 }
             })
+    }
+
+    private fun deleteActivity(activity: LoggedActivity) {
+        val userId = encryptedPreferencesManager?.getUserId() ?: return
+
+        val requestBody = mapOf(
+            "userId" to userId,
+            "date" to selectedDate,
+            "activityId" to activity.activity
+        )
+        Log.d("DeleteActivityRequest", requestBody.toString())
+
+        val api = RetrofitClient.getInstance(requireContext()).activityApi
+        val request = RemoveActivityRequest(userId, selectedDate, activity.activity)
+        api.deleteActivityFromDailyLog(request).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    Toasty.success(requireContext(), "Activity deleted", Toast.LENGTH_SHORT, true)
+                        .show()
+                    dailylog(selectedDate)
+                } else {
+                    Toasty.error(
+                        requireContext(),
+                        "Failed to delete activity",
+                        Toast.LENGTH_SHORT,
+                        true
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toasty.error(
+                    requireContext(),
+                    "Network error: ${t.message}",
+                    Toast.LENGTH_SHORT,
+                    true
+                ).show()
+            }
+        })
     }
 }

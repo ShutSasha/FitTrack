@@ -40,6 +40,7 @@ class RetrofitClient private constructor(context: Context) {
     val roleApi: RoleApi = retrofit.create(RoleApi::class.java)
     val productRequestApi: ProductRequestApi = retrofit.create(ProductRequestApi::class.java)
     val nutritionProductApi: NutritionProductApi = retrofit.create(NutritionProductApi::class.java)
+    val activityApi: ActivityApi = retrofit.create(ActivityApi::class.java)
 
     companion object {
         @Volatile

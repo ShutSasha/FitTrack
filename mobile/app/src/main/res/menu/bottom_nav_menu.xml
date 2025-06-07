@@ -12,7 +12,7 @@
         android:title="" />
 
     <item
-        android:id="@+id/navigation_activity"
+        android:id="@+id/navigation_searchSport"
         android:icon="@drawable/ic_dumbbell"
         android:title="" />
 

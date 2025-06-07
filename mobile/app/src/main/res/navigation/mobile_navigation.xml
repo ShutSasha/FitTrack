@@ -76,5 +76,16 @@
         android:label="AddFoodToMealFragment"
         tools:layout="@layout/fragment_add_food_to_meal" />
 
+    <fragment
+        android:id="@+id/navigation_searchSport"
+        android:name="com.example.mobile.presentation.view.main.sport.SearchSportFragment"
+        android:label="SearchSportFragment"
+        tools:layout="@layout/fragment_search_sport" />
+
+    <fragment
+        android:id="@+id/navigation_addSport"
+        android:name="com.example.mobile.presentation.view.main.sport.AddSportFragment"
+        android:label="AddSportFragment"
+        tools:layout="@layout/fragment_add_sport" />
 
 </navigation>

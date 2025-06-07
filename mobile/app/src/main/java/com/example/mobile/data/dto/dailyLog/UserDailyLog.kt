@@ -1,6 +1,6 @@
 package com.example.mobile.data.dto.dailyLog
 
-import com.example.mobile.domain.model.Activity
+import com.example.mobile.domain.model.LoggedActivity
 import com.example.mobile.domain.model.Meal
 import com.example.mobile.domain.model.Nutrition
 
@@ -17,5 +17,5 @@ data class UserDailyLogRes(
     val carbs: Nutrition,
     val water: Nutrition,
     val weight: Nutrition,
-    val activities: List<Activity>,
+    val activities: List<LoggedActivity>,
 )

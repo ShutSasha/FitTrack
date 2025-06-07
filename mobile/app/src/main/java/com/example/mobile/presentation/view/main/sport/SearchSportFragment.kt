@@ -1,4 +1,4 @@
-package com.example.mobile.presentation.view.main.food
+package com.example.mobile.presentation.view.main.sport
 
 import android.os.Bundle
 import android.os.Handler
@@ -9,17 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.mobile.R
-import com.example.mobile.data.api.NutritionProductApi
+import com.example.mobile.data.api.ActivityApi
 import com.example.mobile.data.api.RetrofitClient
-import com.example.mobile.data.dto.nutritionProduct.ProductSearchResponse
-import com.example.mobile.domain.model.Product
+import com.example.mobile.data.dto.activity.ActivitySearchResponse
+import com.example.mobile.domain.model.Activity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,11 +26,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class SearchFoodFragment : Fragment() {
+class SearchSportFragment : Fragment() {
 
-    private lateinit var productsContainer: LinearLayout
-    private lateinit var nutritionProductApi: NutritionProductApi
-    private var selectedFilter: String? = null
+    private lateinit var activitiesContainer: LinearLayout
+    private lateinit var activityApi: ActivityApi
     private var sortBy: String? = null
     private var sortOrder: String? = null
     private var currentQuery: String = ""
@@ -53,35 +51,25 @@ class SearchFoodFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_search_food, container, false)
-        productsContainer = view.findViewById(R.id.productsContainer)
-        nutritionProductApi = RetrofitClient.getInstance(requireContext()).nutritionProductApi
+        val view = inflater.inflate(R.layout.fragment_search_sport, container, false)
+        activitiesContainer = view.findViewById(R.id.productsContainer)
+        activityApi = RetrofitClient.getInstance(requireContext()).activityApi
 
-        loadAllProducts(inflater)
+        loadAllActivities(inflater)
         setupSearchAndFilters(view)
 
         return view
     }
 
-    private fun loadAllProducts(inflater: LayoutInflater) {
+    private fun loadAllActivities(inflater: LayoutInflater) {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val products = withContext(Dispatchers.IO) {
-                    nutritionProductApi.getAllNutritionProducts()
+                val activities = withContext(Dispatchers.IO) {
+                    activityApi.getAllActivities()
                 }
-                renderProducts(products.map {
-                    Product(
-                        _id = it._id,
-                        name = it.name,
-                        calories = it.calories,
-                        protein = it.protein,
-                        fat = it.fat,
-                        carbs = it.carbs,
-                        productType = it.productType
-                    )
-                })
+                renderActivities(activities)
             } catch (e: Exception) {
-                Log.e("SearchFoodFragment", "Failed to fetch all products", e)
+                Log.e("SearchSportFragment", "Failed to fetch all activities", e)
             }
         }
     }
@@ -97,7 +85,7 @@ class SearchFoodFragment : Fragment() {
                     currentQuery = query
                     currentPage = 1
                     isLastPage = false
-                    searchAndFilterProducts(query)
+                    searchActivities(query)
                 }
                 searchHandler.postDelayed(searchRunnable!!, 500)
             }
@@ -108,35 +96,24 @@ class SearchFoodFragment : Fragment() {
             }
         })
 
-        val filterBtn =
-            view.findViewById<View>(R.id.searchFieldContainer).findViewById<View>(R.id.filter)
         val sortBtn =
             view.findViewById<View>(R.id.searchFieldContainer).findViewById<View>(R.id.sort)
-
-        filterBtn.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("selected_filter", selectedFilter)
-                putString("source", "food")
-            }
-            findNavController().navigate(R.id.navigation_filter, bundle)
-        }
 
         sortBtn.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("selected_sort_by", sortBy)
                 putString("selected_sort_order", sortOrder)
-                putString("source", "food")
+                putString("source", "sport")
             }
             findNavController().navigate(R.id.navigation_sort, bundle)
         }
 
-        val navBackStackEntry = findNavController().currentBackStackEntry
-        navBackStackEntry?.savedStateHandle?.getLiveData<String?>("selected_filter")
-            ?.observe(viewLifecycleOwner) { selectedValue ->
-                selectedFilter = selectedValue
-                resetAndSearch()
-            }
+        val filterBtn =
+            view.findViewById<View>(R.id.searchFieldContainer).findViewById<View>(R.id.filter)
+        filterBtn.visibility = View.GONE
 
+
+        val navBackStackEntry = findNavController().currentBackStackEntry
         navBackStackEntry?.savedStateHandle?.getLiveData<String?>("selected_sort_by")
             ?.observe(viewLifecycleOwner) { value ->
                 sortBy = value
@@ -153,71 +130,64 @@ class SearchFoodFragment : Fragment() {
     private fun resetAndSearch() {
         currentPage = 1
         isLastPage = false
-        searchAndFilterProducts(currentQuery.ifBlank { null })
+        searchActivities(currentQuery.ifBlank { null })
     }
 
-    private fun searchAndFilterProducts(query: String? = null, page: Int = 1) {
+    private fun searchActivities(query: String? = null, page: Int = 1) {
         if (isLoading || isLastPage) return
         isLoading = true
 
-        nutritionProductApi.searchNutritionProducts(
+        activityApi.searchActivities(
             query = query,
             page = page,
             limit = pageSize,
             sortBy = sortBy,
-            sortOrder = sortOrder,
-            productType = selectedFilter
-        ).enqueue(object : Callback<ProductSearchResponse> {
+            sortOrder = sortOrder
+        ).enqueue(object : Callback<ActivitySearchResponse> {
             override fun onResponse(
-                call: Call<ProductSearchResponse>,
-                response: Response<ProductSearchResponse>
+                call: Call<ActivitySearchResponse>,
+                response: Response<ActivitySearchResponse>
             ) {
                 isLoading = false
                 if (response.isSuccessful) {
                     val data = response.body()
                     data?.let {
                         if (page == 1) {
-                            productsContainer.removeAllViews()
+                            activitiesContainer.removeAllViews()
                         }
-                        renderProducts(it.items)
+                        renderActivities(it.items)
                         if (it.items.size < pageSize) isLastPage = true else currentPage++
                     }
                 }
             }
 
-            override fun onFailure(call: Call<ProductSearchResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ActivitySearchResponse>, t: Throwable) {
                 isLoading = false
-                Log.e("SearchFoodFragment", "Search failed", t)
+                Log.e("SearchSportFragment", "Search failed", t)
             }
         })
     }
 
-    private fun renderProducts(products: List<Product>) {
+    private fun renderActivities(activities: List<Activity>) {
         val inflater = layoutInflater
-        products.forEachIndexed { index, product ->
-            val productView =
-                inflater.inflate(R.layout.item_nutrition_product, productsContainer, false)
-            val productName: TextView = productView.findViewById(R.id.productName)
-            val addProductIcon: ImageView = productView.findViewById(R.id.addProductIcon)
-            val container: View = productView.findViewById(R.id.productContainer)
+        activities.forEachIndexed { index, activity ->
+            val view = inflater.inflate(R.layout.item_activity, activitiesContainer, false)
+            val nameText: TextView = view.findViewById(R.id.activityName)
+            val container: View = view.findViewById(R.id.activityContainer)
 
-            productName.text = product.name
+            nameText.text = activity.name
             container.setBackgroundResource(backgroundDrawables[index % backgroundDrawables.size])
 
             container.setOnClickListener {
                 val bundle = Bundle().apply {
-                    putString("productId", product._id)
-                    putString("productName", product.name)
-                    putString("calories", product.calories.toString())
-                    putString("protein", product.protein.toString())
-                    putString("fat", product.fat.toString())
-                    putString("carbs", product.carbs.toString())
-                    putString("productType", product.productType)
+                    putString("activityId", activity._id)
+                    putString("activityName", activity.name)
+                    putDouble("caloriesPerMin", activity.caloriesPerMin)
                 }
-                findNavController().navigate(R.id.navigation_addFoodToMeal, bundle)
+                findNavController().navigate(R.id.navigation_addSport, bundle)
             }
 
-            productsContainer.addView(productView)
+            activitiesContainer.addView(view)
         }
     }
 }
