@@ -109,7 +109,10 @@ export class ActivitiesService {
     const deletedActivity = dailyLog.activities.find(activity => activity._id.equals(dto.activityId))
 
     if (!deletedActivity) {
-      throw new HttpException('Activity with this unique ObjectId NOT FOUND', HttpStatus.BAD_REQUEST)
+      throw new HttpException(
+        'Activity with this unique ObjectId NOT FOUND, activityId is _id of object activity',
+        HttpStatus.BAD_REQUEST,
+      )
     }
 
     dailyLog.activities = dailyLog.activities.filter(activity => !activity._id.equals(dto.activityId))
@@ -124,11 +127,15 @@ export class ActivitiesService {
     const dailyLog = await this.dailyLogService.getDailyLogByUserIdAndDate(dto.userId, dto.date)
 
     const activityToUpdate = dailyLog.activities.find(act => act._id.equals(dto.activityId))
-    const activity = await this.getActivityById(activityToUpdate.activity.toString())
 
     if (!activityToUpdate) {
-      throw new HttpException('Activity with this unique ObjectId NOT FOUND', HttpStatus.BAD_REQUEST)
+      throw new HttpException(
+        'Activity with this unique ObjectId NOT FOUND, activityId is _id of object activity',
+        HttpStatus.BAD_REQUEST,
+      )
     }
+
+    const activity = await this.getActivityById(activityToUpdate.activity.toString())
 
     activityToUpdate.totalMinutes = dto.totalMinutes
     activityToUpdate.burnedCalories = activity.caloriesPerMin * dto.totalMinutes
