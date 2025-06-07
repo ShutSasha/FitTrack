@@ -94,15 +94,17 @@ class AddSportFragment : Fragment() {
             }
 
             if (isEditMode && existingDate != null) {
+                val date = existingDate!!.substring(0, 10)
                 val request = EditActivityRequest(
                     userId = userId,
-                    date = existingDate!!,
+                    date = date,
                     activityId = activityId,
                     totalMinutes = minutes
                 )
                 Log.d("EditActivityRequest", request.toString())
                 api.editActivityInDailyLog(request).enqueue(callback)
-            } else {
+            }
+            else {
                 val request = AddActivityRequest(
                     userId = userId,
                     date = date,

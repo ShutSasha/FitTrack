@@ -181,9 +181,10 @@ class HomeFragment : Fragment() {
 
                 itemBinding.editIcon.setOnClickListener {
                     val bundle = Bundle().apply {
-                        putString("activityId", activity.activity)
+                        putString("activityId", activity._id)
                         putString("activityName", activity.activityName)
-                        putDouble("caloriesPerMin", activity.burnedCalories / activity.totalMinutes)
+                        val caloriesPerMin = if (activity.totalMinutes > 0) activity.burnedCalories / activity.totalMinutes else 0.0
+                        putDouble("caloriesPerMin", caloriesPerMin)
                         putString("existingDate", logRes.date)
                         putInt("totalMinutes", activity.totalMinutes)
                         putBoolean("isEditMode", true)
@@ -304,12 +305,12 @@ class HomeFragment : Fragment() {
         val requestBody = mapOf(
             "userId" to userId,
             "date" to selectedDate,
-            "activityId" to activity.activity
+            "activityId" to activity._id
         )
         Log.d("DeleteActivityRequest", requestBody.toString())
 
         val api = RetrofitClient.getInstance(requireContext()).activityApi
-        val request = RemoveActivityRequest(userId, selectedDate, activity.activity)
+        val request = RemoveActivityRequest(userId, selectedDate, activity._id)
         api.deleteActivityFromDailyLog(request).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
