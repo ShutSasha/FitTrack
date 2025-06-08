@@ -8,7 +8,7 @@ data class UserDailyLogRes(
     val _id: String,
     val userId: String,
     val date: String,
-    val burnedCalories: Int,
+    val burnedCalories: Double,
     val totalCalories: Double,
     val meals: List<Meal>,
     val calories: Nutrition,
