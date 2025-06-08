@@ -40,7 +40,8 @@ class AuthInterceptor(
                 if (!isRefreshing) {
                     isRefreshing = true
                     val refreshToken = encryptedPreferencesManager.getRefreshToken()
-                    val newAccessToken = if (refreshToken != null) refreshAccessToken(refreshToken) else null
+                    val newAccessToken =
+                        if (refreshToken != null) refreshAccessToken(refreshToken) else null
                     isRefreshing = false
 
                     if (!newAccessToken.isNullOrBlank()) {
@@ -87,7 +88,10 @@ class AuthInterceptor(
                     Log.e("AuthInterceptor", "Empty response body during token refresh")
                 }
             } else {
-                Log.e("AuthInterceptor", "Refresh token failed: ${refreshResponse.errorBody()?.string()}")
+                Log.e(
+                    "AuthInterceptor",
+                    "Refresh token failed: ${refreshResponse.errorBody()?.string()}"
+                )
             }
             null
         } catch (e: Exception) {

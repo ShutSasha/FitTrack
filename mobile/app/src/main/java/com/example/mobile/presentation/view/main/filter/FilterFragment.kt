@@ -37,7 +37,7 @@ class FilterFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFilterBinding.inflate(inflater, container, false)
         encryptedPreferencesManager = EncryptedPreferencesManager(requireContext())
         filterDropdown = FilterDropdown(requireContext())
@@ -69,8 +69,6 @@ class FilterFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-
         return binding.root
     }
-
 }

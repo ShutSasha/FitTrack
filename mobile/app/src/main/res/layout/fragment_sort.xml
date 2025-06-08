@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="66dp"
+    android:background="@drawable/shape_main_background"
     android:paddingStart="16dp"
+    android:paddingTop="66dp"
     android:paddingEnd="16dp"
-    android:background="@drawable/shape_main_background">
+    android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp">
 
         <LinearLayout
             android:id="@+id/titleContainer"
@@ -46,8 +45,8 @@
             android:id="@+id/sort1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="53dp"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleContainer">
@@ -75,20 +74,18 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/saveButton"
-            android:background="@drawable/shape_yellow_card"
-            android:textSize="20sp"
-            android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="51dp"
             android:layout_marginTop="31dp"
-            android:text="@string/save"
+            android:background="@drawable/shape_yellow_card"
             android:elevation="0dp"
             android:stateListAnimator="@null"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sort2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>
-

@@ -13,9 +13,7 @@ object ErrorUtils {
 
         return try {
             val jsonObject = JSONObject(errorBody)
-            val messagesAny = jsonObject.opt("messages")
-
-            when (messagesAny) {
+            when (val messagesAny = jsonObject.opt("messages")) {
                 is JSONArray -> buildMultilineMessage(messagesAny)
                 is String -> messagesAny
                 else -> jsonObject.optString("message", "Unknown error")

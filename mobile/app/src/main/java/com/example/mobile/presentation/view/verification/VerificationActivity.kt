@@ -64,7 +64,13 @@ class VerificationActivity : AppCompatActivity() {
     private fun setupCodeInputBehavior() {
         for (i in codeInputs.indices) {
             codeInputs[i].addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
@@ -116,7 +122,8 @@ class VerificationActivity : AppCompatActivity() {
                 intent.putExtra("email", email)
                 startActivity(intent)
             } else {
-                Toasty.warning(this, "Please enter the full 4-digit code", Toast.LENGTH_SHORT, true).show()
+                Toasty.warning(this, "Please enter the full 4-digit code", Toast.LENGTH_SHORT, true)
+                    .show()
             }
         }
     }
@@ -128,7 +135,10 @@ class VerificationActivity : AppCompatActivity() {
             val authAPI = RetrofitClient.Companion.getInstance(this).authAPI
 
             authAPI.sendResetPasswordCode(email).enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
                     if (response.isSuccessful) {
                         response.body()?.let {
 
@@ -173,5 +183,4 @@ class VerificationActivity : AppCompatActivity() {
             finish()
         }
     }
-
 }

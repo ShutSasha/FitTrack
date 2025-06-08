@@ -58,5 +58,7 @@ dependencies {
     implementation ("androidx.security:security-crypto:1.1.0-alpha03")
     implementation ("androidx.security:security-crypto-ktx:1.1.0-alpha03")
     implementation ("com.github.bumptech.glide:glide:4.15.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.0")
 }

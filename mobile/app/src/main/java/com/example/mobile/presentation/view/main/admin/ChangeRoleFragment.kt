@@ -17,13 +17,13 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.example.mobile.R
 import com.example.mobile.data.api.RetrofitClient
-import com.example.mobile.databinding.FragmentChangeRoleBinding
-import com.example.mobile.dto.role.ChangeRoleDto
-import com.example.mobile.dto.user.UserSearchResponse
-import com.example.mobile.domain.model.Role
+import com.example.mobile.data.dto.role.ChangeRoleDto
+import com.example.mobile.data.dto.user.UserSearchResponse
 import com.example.mobile.data.store.EncryptedPreferencesManager
-import com.example.mobile.presentation.view.util.ErrorUtils
+import com.example.mobile.databinding.FragmentChangeRoleBinding
+import com.example.mobile.domain.model.Role
 import com.example.mobile.presentation.view.custom.ChangeRoleDropdown
+import com.example.mobile.presentation.view.util.ErrorUtils
 import es.dmoral.toasty.Toasty
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -48,7 +48,7 @@ class ChangeRoleFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentChangeRoleBinding.inflate(inflater, container, false)
         encryptedPreferencesManager = EncryptedPreferencesManager(requireContext())
 
@@ -87,9 +87,9 @@ class ChangeRoleFragment : Fragment() {
     }
 
     private fun setupScrollListener() {
-        val scrollView = binding?.main ?: return
+        val scrollView = binding.main
         val scrollListener = ViewTreeObserver.OnScrollChangedListener {
-            val b = binding ?: return@OnScrollChangedListener
+            val b = binding
             val sv = b.main
             val view = sv.getChildAt(0) ?: return@OnScrollChangedListener
 
@@ -118,7 +118,10 @@ class ChangeRoleFragment : Fragment() {
         val userApi = RetrofitClient.getInstance(requireContext()).userApi
 
         userApi.searchUsers(query, page, limit).enqueue(object : Callback<UserSearchResponse> {
-            override fun onResponse(call: Call<UserSearchResponse>, response: Response<UserSearchResponse>) {
+            override fun onResponse(
+                call: Call<UserSearchResponse>,
+                response: Response<UserSearchResponse>
+            ) {
                 isLoading = false
                 if (response.isSuccessful) {
                     val newData = response.body()
@@ -183,15 +186,22 @@ class ChangeRoleFragment : Fragment() {
             )
 
             for ((index, user) in userRes.items.withIndex()) {
-                val userLayout = layoutInflater.inflate(R.layout.dropdown, binding.userListContainer, false) as LinearLayout
+                val userLayout = layoutInflater.inflate(
+                    R.layout.dropdown,
+                    binding.userListContainer,
+                    false
+                ) as LinearLayout
                 val header = userLayout.findViewById<View>(R.id.header)
+                val title = userLayout.findViewById<TextView>(R.id.headerTitle)
                 val arrow = userLayout.findViewById<ImageView>(R.id.arrow)
                 val optionsContainer = userLayout.findViewById<LinearLayout>(R.id.options)
-                val selectedTextView = userLayout.findViewById<TextView>(R.id.headerTitle)
+                val selectedRole = userLayout.findViewById<TextView>(R.id.userRole)
 
-                selectedTextView.text = user.username
+                title.text = user.username
+                selectedRole.text = if (user.roles.isNotEmpty()) user.roles[0].value else "No role"
 
-                header.background = requireContext().getDrawable(backgrounds[index % backgrounds.size])
+                header.background =
+                    requireContext().getDrawable(backgrounds[index % backgrounds.size])
 
                 val roleOptions = roles.map { it.value to it._id }
 
@@ -200,9 +210,10 @@ class ChangeRoleFragment : Fragment() {
                     container = optionsContainer,
                     header = header,
                     arrow = arrow,
-                    selectedTextView = selectedTextView,
-                    options = roleOptions
-                ) { selectedRoleId ->
+                    selectedRole = selectedRole,
+                    options = roleOptions,
+                    onOptionSelected = { }
+                ) { selectedRoleId, selectedRoleName ->
                     changeUserRole(user._id, selectedRoleId)
                 }
 
@@ -224,7 +235,8 @@ class ChangeRoleFragment : Fragment() {
         roleApi.changeRole(accessToken, changeRoleDto).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    Toasty.success(requireContext(), "Role updated", Toast.LENGTH_SHORT, true).show()
+                    Toasty.success(requireContext(), "Role updated", Toast.LENGTH_SHORT, true)
+                        .show()
                 } else {
                     showError(ErrorUtils.parseErrorMessage(response.errorBody()?.string()))
                 }

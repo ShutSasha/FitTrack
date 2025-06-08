@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="FilledFieldStyle">
         <item name="android:background">@drawable/shape_filled_button</item>
         <item name="android:textColor">#030303</item>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.login.LoginActivity"
-    android:background="@drawable/shape_background">
+    android:background="@drawable/shape_background"
+    tools:context=".presentation.view.login.LoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -42,13 +41,13 @@
             android:layout_height="51dp"
             android:layout_marginTop="41dp"
             android:hint="@string/enter_email"
+            android:inputType="text"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textColorHint="#606060"
-            android:inputType="text"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
         <EditText
             android:id="@+id/username"
@@ -57,13 +56,13 @@
             android:layout_height="51dp"
             android:layout_marginTop="19dp"
             android:hint="@string/enter_username"
+            android:inputType="text"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textColorHint="#606060"
-            android:inputType="text"
-            app:layout_constraintTop_toBottomOf="@id/email"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/email" />
 
         <EditText
             android:id="@+id/password"
@@ -72,13 +71,13 @@
             android:layout_height="51dp"
             android:layout_marginTop="19dp"
             android:hint="@string/enter_password"
+            android:inputType="textPassword"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textColorHint="#606060"
-            android:inputType="textPassword"
-            app:layout_constraintTop_toBottomOf="@id/username"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/username" />
 
         <TextView
             android:id="@+id/forgotPassword"
@@ -86,11 +85,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="21dp"
-            android:text="@string/forgot_password"
             android:gravity="end"
-            app:layout_constraintTop_toBottomOf="@id/password"
+            android:text="@string/forgot_password"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/password" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginButton"
@@ -99,22 +98,21 @@
             android:layout_height="51dp"
             android:layout_marginTop="36dp"
             android:text="@string/login"
-            app:layout_constraintTop_toBottomOf="@id/forgotPassword"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/forgotPassword" />
 
         <TextView
             android:id="@+id/dontHaveAnAccount"
             style="@style/AuthLinkText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginBottom="30dp"
+            android:gravity="center"
             android:text="@string/don_t_have_an_account_register_now"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </FrameLayout>

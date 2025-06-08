@@ -16,11 +16,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mobile.R
-import com.example.mobile.presentation.view.register.RegisterActivity
-import com.example.mobile.presentation.view.verification.VerificationActivity
 import com.example.mobile.data.api.RetrofitClient
 import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.databinding.ActivityForgotPasswordBinding
+import com.example.mobile.presentation.view.register.RegisterActivity
+import com.example.mobile.presentation.view.verification.VerificationActivity
 import es.dmoral.toasty.Toasty
 import okhttp3.ResponseBody
 import org.json.JSONObject

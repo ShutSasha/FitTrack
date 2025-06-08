@@ -3,14 +3,11 @@ package com.example.mobile.presentation.view.custom
 import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.mobile.R
-import com.example.mobile.domain.model.Meal
-import com.example.mobile.dto.dailyLog.UserDailyLogRes
 
 class FilterDropdown(private val context: Context) {
 

@@ -1,6 +1,5 @@
 package com.example.mobile.presentation.view.personalization
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,11 +10,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mobile.R
 import com.example.mobile.data.api.RetrofitClient
+import com.example.mobile.data.dto.auth.PersonalizeDto
+import com.example.mobile.data.dto.auth.PersonalizeResponse
 import com.example.mobile.data.store.EncryptedPreferencesManager
 import com.example.mobile.databinding.ActivityPersonalizationBinding
-import com.example.mobile.dto.auth.PersonalizeDto
-import com.example.mobile.dto.auth.PersonalizeResponse
 import com.example.mobile.presentation.view.splash.SplashActivity
+import com.example.mobile.presentation.view.util.DateUtils.getTodayDateString
 import com.example.mobile.presentation.view.util.PersonalizationDropdown
 import com.example.mobile.presentation.view.util.UserProfileOptions
 import es.dmoral.toasty.Toasty
@@ -29,10 +29,10 @@ class PersonalizationActivity : AppCompatActivity() {
     private lateinit var _binding: ActivityPersonalizationBinding
     private var encryptedPreferencesManager: EncryptedPreferencesManager? = null
     private lateinit var personalizationDropdown: PersonalizationDropdown
-    private lateinit var selectedGender : String
-    private lateinit var selectedBodyType : String
-    private lateinit var selectedActivityLevel : String
-    private lateinit var selectedGoalType : String
+    private lateinit var selectedGender: String
+    private lateinit var selectedBodyType: String
+    private lateinit var selectedActivityLevel: String
+    private lateinit var selectedGoalType: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,38 +54,41 @@ class PersonalizationActivity : AppCompatActivity() {
             header = _binding.headerGender,
             arrow = _binding.genderArrow,
             selectedTextView = _binding.selectedGender,
-            options = UserProfileOptions.genders
-        ) { selectedKey -> selectedGender = selectedKey }
+            options = UserProfileOptions.genders,
+            onOptionSelected = { selectedKey -> selectedGender = selectedKey },
+            optionBackgroundRes = R.drawable.shape_outlined_button
+        )
 
         personalizationDropdown.setUpDropdown(
             container = _binding.bodyTypeOptions,
             header = _binding.headerBodyType,
             arrow = _binding.bodyTypeArrow,
             selectedTextView = _binding.selectedBodyType,
-            options = UserProfileOptions.bodyTypes
-        ) { selectedKey ->
-            selectedBodyType = selectedKey
-        }
+            options = UserProfileOptions.bodyTypes,
+            onOptionSelected = { selectedKey -> selectedBodyType = selectedKey },
+            optionBackgroundRes = R.drawable.shape_outlined_button
+        )
 
         personalizationDropdown.setUpDropdown(
             container = _binding.activityLevelOptions,
             header = _binding.headerActivityLevel,
             arrow = _binding.activityLevelArrow,
             selectedTextView = _binding.selectedActivityLevel,
-            options = UserProfileOptions.activityLevels
-        ) { selectedKey ->
-            selectedActivityLevel = selectedKey
-        }
+            options = UserProfileOptions.activityLevels,
+            onOptionSelected = { selectedKey -> selectedActivityLevel = selectedKey },
+            optionBackgroundRes = R.drawable.shape_outlined_button
+        )
 
         personalizationDropdown.setUpDropdown(
             container = _binding.goalTypeOptions,
             header = _binding.headerGoalType,
             arrow = _binding.goalTypeArrow,
             selectedTextView = _binding.selectedGoalType,
-            options = UserProfileOptions.goalTypes
-        ) { selectedKey ->
-            selectedGoalType = selectedKey
-        }
+            options = UserProfileOptions.goalTypes,
+            onOptionSelected = { selectedKey -> selectedGoalType = selectedKey },
+            optionBackgroundRes = R.drawable.shape_outlined_button
+        )
+
 
         _binding.personalizeButton.setOnClickListener {
             personalize()
@@ -104,13 +107,17 @@ class PersonalizationActivity : AppCompatActivity() {
             activityLevel = selectedActivityLevel,
             birthDate = _binding.birthDate.text.toString(),
             goalType = selectedGoalType,
-            targetWeight = _binding.targetWeight.text.toString().toDouble()
+            targetWeight = _binding.targetWeight.text.toString().toDouble(),
+            currentDate = getTodayDateString()
         )
         Log.d("Personalization", personalizeDto.toString())
         val authAPI = RetrofitClient.Companion.getInstance(this).authAPI
 
         authAPI.personalize(personalizeDto).enqueue(object : Callback<PersonalizeResponse> {
-            override fun onResponse(call: Call<PersonalizeResponse>, response: Response<PersonalizeResponse>) {
+            override fun onResponse(
+                call: Call<PersonalizeResponse>,
+                response: Response<PersonalizeResponse>
+            ) {
                 if (response.isSuccessful) {
                     response.body()?.let {
                         Toasty.success(

@@ -1,4 +1,4 @@
-package com.example.mobile.dto.user
+package com.example.mobile.data.dto.user
 
 import com.example.mobile.domain.model.User
 

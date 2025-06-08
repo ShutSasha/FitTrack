@@ -12,25 +12,25 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/mobile_navigation"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/customNavBar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/mobile_navigation" />
 
     <LinearLayout
         android:id="@+id/customNavBar"
         android:layout_width="0dp"
         android:layout_height="86dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="18dp"
         android:background="@drawable/shape_menu"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="12dp"
-        android:layout_marginBottom="18dp"
-        android:layout_marginHorizontal="16dp"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <FrameLayout
             android:id="@+id/nav_home"
@@ -43,20 +43,20 @@
                 android:id="@+id/nav_home_bg"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_gravity="center"
                 android:background="@drawable/shape_menu_item_selected"
-                android:visibility="invisible"
                 android:scaleX="0.1"
                 android:scaleY="0.1"
-                android:layout_gravity="center" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/nav_home_icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_home"
-                app:tint="@color/nav_item_color"
                 android:layout_gravity="center"
-                android:contentDescription="@string/title_home" />
+                android:contentDescription="@string/title_home"
+                android:src="@drawable/ic_home"
+                app:tint="@color/nav_item_color" />
         </FrameLayout>
 
         <FrameLayout
@@ -70,20 +70,20 @@
                 android:id="@+id/nav_food_bg"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_gravity="center"
                 android:background="@drawable/shape_menu_item_selected"
-                android:visibility="invisible"
                 android:scaleX="0.1"
                 android:scaleY="0.1"
-                android:layout_gravity="center" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/nav_food_icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_food"
-                app:tint="@color/nav_item_color"
                 android:layout_gravity="center"
-                android:contentDescription="@string/food" />
+                android:contentDescription="@string/food"
+                android:src="@drawable/ic_food"
+                app:tint="@color/nav_item_color" />
         </FrameLayout>
 
         <FrameLayout
@@ -97,20 +97,20 @@
                 android:id="@+id/nav_activity_bg"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_gravity="center"
                 android:background="@drawable/shape_menu_item_selected"
-                android:visibility="invisible"
                 android:scaleX="0.1"
                 android:scaleY="0.1"
-                android:layout_gravity="center" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/nav_activity_icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_dumbbell"
-                app:tint="@color/nav_item_color"
                 android:layout_gravity="center"
-                android:contentDescription="@string/activity" />
+                android:contentDescription="@string/activity"
+                android:src="@drawable/ic_dumbbell"
+                app:tint="@color/nav_item_color" />
         </FrameLayout>
 
         <FrameLayout
@@ -124,20 +124,20 @@
                 android:id="@+id/nav_profile_bg"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_gravity="center"
                 android:background="@drawable/shape_menu_item_selected"
-                android:visibility="invisible"
                 android:scaleX="0.1"
                 android:scaleY="0.1"
-                android:layout_gravity="center" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/nav_profile_icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_profile"
-                app:tint="@color/nav_item_color"
                 android:layout_gravity="center"
-                android:contentDescription="@string/profile" />
+                android:contentDescription="@string/profile"
+                android:src="@drawable/ic_profile"
+                app:tint="@color/nav_item_color" />
         </FrameLayout>
 
         <FrameLayout
@@ -151,22 +151,20 @@
                 android:id="@+id/nav_admin_bg"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_gravity="center"
                 android:background="@drawable/shape_menu_item_selected"
-                android:visibility="invisible"
                 android:scaleX="0.1"
                 android:scaleY="0.1"
-                android:layout_gravity="center" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/nav_admin_icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_shield"
-                app:tint="@color/nav_item_color"
                 android:layout_gravity="center"
-                android:contentDescription="@string/admin" />
+                android:contentDescription="@string/admin"
+                android:src="@drawable/ic_shield"
+                app:tint="@color/nav_item_color" />
         </FrameLayout>
-
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

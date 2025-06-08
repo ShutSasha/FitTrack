@@ -39,4 +39,53 @@
         android:name="com.example.mobile.presentation.view.main.admin.FoodRequestFragment"
         android:label="FoodRequest"
         tools:layout="@layout/fragment_food_request" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.mobile.presentation.view.main.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/navigation_edit_profile"
+        android:name="com.example.mobile.presentation.view.main.profile.EditProfileFragment"
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_edit_profile" />
+
+    <fragment
+        android:id="@+id/navigation_food"
+        android:name="com.example.mobile.presentation.view.main.food.FoodFragment"
+        android:label="FoodFragment"
+        tools:layout="@layout/fragment_food" />
+
+    <fragment
+        android:id="@+id/navigation_searchFood"
+        android:name="com.example.mobile.presentation.view.main.food.SearchFoodFragment"
+        android:label="SearchFoodFragment"
+        tools:layout="@layout/fragment_search_food" />
+
+    <fragment
+        android:id="@+id/navigation_addNewFood"
+        android:name="com.example.mobile.presentation.view.main.food.AddNewFoodFragment"
+        android:label="AddNewFoodFragment"
+        tools:layout="@layout/fragment_add_new_food" />
+
+    <fragment
+        android:id="@+id/navigation_addFoodToMeal"
+        android:name="com.example.mobile.presentation.view.main.food.AddFoodToMealFragment"
+        android:label="AddFoodToMealFragment"
+        tools:layout="@layout/fragment_add_food_to_meal" />
+
+    <fragment
+        android:id="@+id/navigation_searchSport"
+        android:name="com.example.mobile.presentation.view.main.sport.SearchSportFragment"
+        android:label="SearchSportFragment"
+        tools:layout="@layout/fragment_search_sport" />
+
+    <fragment
+        android:id="@+id/navigation_addSport"
+        android:name="com.example.mobile.presentation.view.main.sport.AddSportFragment"
+        android:label="AddSportFragment"
+        tools:layout="@layout/fragment_add_sport" />
+
 </navigation>

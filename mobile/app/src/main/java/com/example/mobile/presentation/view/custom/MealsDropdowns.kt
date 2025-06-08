@@ -6,9 +6,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.mobile.R
+import com.example.mobile.data.dto.dailyLog.UserDailyLogRes
 import com.example.mobile.domain.model.Meal
-import com.example.mobile.dto.dailyLog.UserDailyLogRes
-import kotlin.collections.iterator
 
 class MealsDropdowns {
 
@@ -19,6 +18,14 @@ class MealsDropdowns {
         onEditClicked: (String) -> Unit,
         onDeleteClicked: (Meal, String) -> Unit
     ) {
+        for ((_, mealView) in dropdownMap) {
+            val container = mealView.findViewById<LinearLayout>(R.id.options)
+            container.removeAllViews()
+            container.visibility = View.GONE
+            val arrow = mealView.findViewById<ImageView>(R.id.arrow)
+            arrow.rotation = 0f
+        }
+
         for ((mealType, mealView) in dropdownMap) {
             val container = mealView.findViewById<LinearLayout>(R.id.options)
             val header = mealView.findViewById<View>(R.id.header)
@@ -35,7 +42,7 @@ class MealsDropdowns {
                     Triple(it.productName, it.productCalories.toInt(), it._id)
                 }
                 val caloriesInt = meal.totalCalories.toInt()
-                totalCalories.text = "${caloriesInt} Kcal"
+                totalCalories.text = "$caloriesInt Kcal"
 
                 setUpDropdown(
                     container = container,
@@ -43,7 +50,9 @@ class MealsDropdowns {
                     arrow = arrow,
                     options = options,
                     onEditClicked = onEditClicked,
-                    onDeleteClicked = { nutritionEntryId -> onDeleteClicked(meal, nutritionEntryId) }
+                    onDeleteClicked = { nutritionEntryId ->
+                        onDeleteClicked(meal, nutritionEntryId)
+                    }
                 )
             } else {
                 container.visibility = View.GONE

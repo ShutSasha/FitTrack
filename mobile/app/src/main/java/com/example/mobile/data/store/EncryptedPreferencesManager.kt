@@ -36,7 +36,10 @@ class EncryptedPreferencesManager(context: Context) {
             if (parts.size < 2) return null
 
             val payloadEncoded = parts[1]
-            val decodedBytes = Base64.decode(payloadEncoded, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
+            val decodedBytes = Base64.decode(
+                payloadEncoded,
+                Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
+            )
             val payload = String(decodedBytes, Charsets.UTF_8)
 
             val json = JSONObject(payload)
@@ -55,7 +58,10 @@ class EncryptedPreferencesManager(context: Context) {
             if (parts.size < 2) return null
 
             val payloadEncoded = parts[1]
-            val decodedBytes = Base64.decode(payloadEncoded, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP)
+            val decodedBytes = Base64.decode(
+                payloadEncoded,
+                Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP
+            )
             val payload = String(decodedBytes, Charsets.UTF_8)
 
             val json = JSONObject(payload)
@@ -94,5 +100,4 @@ class EncryptedPreferencesManager(context: Context) {
     fun getRefreshToken(): String? {
         return sharedPreferences.getString("refreshToken", null)
     }
-
 }
